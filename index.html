@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Retomada · Fernando</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF2F1; --surface:#FFFFFF; --ink:#14212B; --muted:#586A77; --line:#D3DCE0;
+  --mat:#1F4E79; --mat-soft:#DCE7F2;
+  --run:#DD6418; --run-soft:#FBE3D3; --walk:#4C9638; --walk-soft:#E1F0DA;
+  --jj:#B3261E; --jj-soft:#F6DAD8; --meal:#E2A916; --meal-soft:#FBF0CF;
+  --pre:#7DAE5B; --sleep:#4A5866; --esp:#7A5AA6; --esp-soft:#ECE5F5;
+  --work:#8A9AA6; --work-soft:#E8EDF0;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#0E161D; --surface:#16222C; --ink:#E5ECF0; --muted:#94A6B3; --line:#283844;
+  --mat:#6FA4D8; --mat-soft:#1C3347; --run-soft:#3A2416; --walk-soft:#1C3119; --jj-soft:#3A1A18;
+  --meal-soft:#3A3014; --esp-soft:#2A2238; --work-soft:#1E2A33; --sleep:#8395A6;
+}}
+:root[data-theme="dark"]{
+  --bg:#0E161D; --surface:#16222C; --ink:#E5ECF0; --muted:#94A6B3; --line:#283844;
+  --mat:#6FA4D8; --mat-soft:#1C3347; --run-soft:#3A2416; --walk-soft:#1C3119; --jj-soft:#3A1A18;
+  --meal-soft:#3A3014; --esp-soft:#2A2238; --work-soft:#1E2A33; --sleep:#8395A6;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 var(--body);-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--run);outline-offset:2px}
+.wrap{max-width:880px;margin:0 auto;padding:0 18px}
+
+/* Hero */
+.hero{background:var(--mat);color:#fff;padding:28px 0 22px}
+:root[data-theme="dark"] .hero{background:#12324F}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hero{background:#12324F}}
+.hero .date{font:600 15px/1.2 var(--body);opacity:.85;margin:0}
+.hero h1{font:800 clamp(44px,11vw,84px)/.92 var(--display);margin:6px 0 4px;letter-spacing:-.5px}
+.hero .sub{font:500 17px/1.35 var(--body);margin:0;opacity:.92}
+.track{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-top:22px}
+.track span{height:30px;border-radius:3px;background:rgba(255,255,255,.14);position:relative;font:700 12px/30px var(--display);text-align:center;color:rgba(255,255,255,.6)}
+.track span.past{background:rgba(255,255,255,.42);color:#fff}
+.track span.now{background:var(--run);color:#fff;box-shadow:0 0 0 2px #fff inset}
+.track-legend{display:flex;justify-content:space-between;font-size:13px;opacity:.75;margin-top:6px}
+
+/* Nav */
+nav{position:sticky;top:0;z-index:10;background:var(--surface);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+nav .wrap{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav .wrap::-webkit-scrollbar{display:none}
+nav button{flex:0 0 auto;background:none;border:0;padding:15px 12px 12px;font:700 17px/1 var(--display);color:var(--muted);border-bottom:3px solid transparent;cursor:pointer;letter-spacing:.2px}
+nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--run)}
+
+main.wrap{padding-top:28px;padding-bottom:70px}
+section[hidden]{display:none}
+h2{font:800 34px/1 var(--display);margin:0 0 6px}
+h3{font:700 22px/1.1 var(--display);margin:26px 0 10px}
+.lead{color:var(--muted);margin:0 0 20px;max-width:62ch}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 18px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-weight:600;font-size:15px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip.today::after{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--run);margin-left:6px;vertical-align:middle}
+
+/* Agenda */
+.agenda{list-style:none;margin:0;padding:0;border-left:2px solid var(--line);margin-left:58px}
+.agenda li{position:relative;padding:4px 0 16px 18px}
+.agenda .t{position:absolute;left:-62px;top:4px;width:50px;text-align:right;font:700 17px/1.2 var(--display);color:var(--muted)}
+.agenda li::before{content:"";position:absolute;left:-7px;top:9px;width:12px;height:12px;border-radius:50%;background:var(--c,var(--muted));border:2px solid var(--bg)}
+.agenda .what{font:700 13px/1 var(--body);color:var(--c,var(--muted));margin-bottom:3px}
+.agenda .txt{margin:0}
+.agenda li.big .txt{font-weight:600}
+.cat-ref{--c:var(--meal)} .cat-pre{--c:var(--pre)} .cat-treino{--c:var(--run)} .cat-jj{--c:var(--jj)}
+.cat-esp{--c:var(--esp)} .cat-pres,.cat-tele{--c:var(--work)} .cat-desc{--c:var(--sleep)} .cat-filho{--c:#2A9DB5}
+
+.today-box{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:6px;padding:16px 18px;margin:0 0 22px}
+.today-box h3{margin:0 0 4px}
+.today-box p{margin:0;color:var(--muted)}
+
+/* Intervals bar */
+.bar{display:flex;height:22px;border-radius:4px;overflow:hidden;margin:10px 0 4px;background:var(--work-soft)}
+.bar i{display:block;height:100%}
+.bar .w5{background:var(--walk-soft)} .bar .r{background:var(--run)} .bar .w{background:var(--walk)}
+.bar i+i{border-left:1px solid var(--surface)}
+.bar-legend{display:flex;gap:14px;font-size:13px;color:var(--muted)}
+.bar-legend b{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+/* Session rows */
+.session{display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:start;padding:16px 0;border-top:1px solid var(--line)}
+.session:first-of-type{border-top:0}
+.day-tag{font:700 15px/1 var(--display);color:#fff;background:var(--d,var(--mat));padding:6px 9px;border-radius:4px;min-width:74px;text-align:center}
+.session .main{font-weight:700;font-size:18px}
+.session .meta{color:var(--muted);font-size:14px}
+.session .bar{grid-column:1/-1}
+.done{border:2px solid var(--line);background:var(--surface);border-radius:6px;padding:7px 12px;font-weight:700;cursor:pointer;white-space:nowrap}
+.done[aria-pressed="true"]{background:var(--walk);border-color:var(--walk);color:#fff}
+
+.week-pick{display:flex;align-items:center;gap:10px;margin:0 0 18px}
+.week-pick button{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--surface);font:700 22px/1 var(--display);cursor:pointer}
+.week-pick .lbl{font:800 30px/1 var(--display);min-width:150px}
+.etapa{display:inline-block;font:700 14px/1 var(--body);padding:5px 9px;border-radius:4px;margin-right:8px}
+.e-Base{background:#CFE6C3;color:#29501C} .e-Consolidação{background:#FBE7A6;color:#6A4F00} .e-Alvo{background:#F8CDB0;color:#7A3410}
+.foco{color:var(--muted);font-style:italic}
+
+/* Gym */
+.gym-tabs{display:flex;gap:6px;margin:6px 0 14px;flex-wrap:wrap}
+.gym-tabs button{border:0;border-radius:6px;padding:10px 14px;font:700 17px/1 var(--display);cursor:pointer;background:var(--surface);color:var(--muted);border:1px solid var(--line)}
+.gym-tabs button[aria-pressed="true"]{color:#fff;background:var(--gc);border-color:var(--gc)}
+.block{border-left:4px solid var(--bc,var(--line));padding:2px 0 2px 14px;margin:0 0 16px}
+.block .m{font:700 13px/1 var(--body);color:var(--bc);margin:0 0 6px}
+.ex{display:grid;grid-template-columns:1fr auto auto 84px 34px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px dashed var(--line)}
+.ex:last-child{border-bottom:0}
+.ex .n{font-weight:600}
+.ex .sr{font:700 19px/1 var(--display);white-space:nowrap}
+.ex input{width:84px;padding:6px 8px;border:1px solid var(--line);border-radius:5px;background:var(--bg);text-align:right}
+.tick{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);background:var(--surface);cursor:pointer;font-weight:800;color:transparent}
+.tick[aria-pressed="true"]{background:var(--walk);border-color:var(--walk);color:#fff}
+.vid{display:inline-flex;align-items:center;gap:5px;font:700 14px/1 var(--body);color:var(--jj);text-decoration:none;padding:6px 10px;border:1px solid var(--jj-soft);border-radius:999px;background:var(--surface);white-space:nowrap}
+.vid::before{content:"";border-left:8px solid currentColor;border-top:5px solid transparent;border-bottom:5px solid transparent}
+.vid:hover{background:var(--jj-soft)}
+.ex .vid{padding:4px 8px;font-size:12px}
+.met-help{font-size:14px;color:var(--muted);margin:0 0 18px}
+.met-help b{color:var(--ink)}
+
+/* Tables */
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:14px}
+th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle}
+th{font:700 15px/1 var(--display);background:var(--mat);color:#fff;position:sticky;top:0}
+td:first-child,th:first-child{text-align:left;font-weight:700;position:sticky;left:0;background:var(--surface);z-index:1}
+th:first-child{background:var(--mat)}
+td .p{display:inline-block;padding:4px 7px;border-radius:4px;font-weight:700;line-height:1.2}
+.p-ref{background:var(--meal-soft)} .p-pre{background:var(--walk-soft)} .p-cor{background:var(--run);color:#fff}
+.p-mus{background:var(--mat);color:#fff} .p-jj{background:var(--jj);color:#fff} .p-jj5{background:var(--jj-soft);color:var(--jj)} .p-sono{background:var(--sleep);color:#fff}
+td.nil{color:var(--line)}
+
+/* Recipes */
+.recipe{border-top:1px solid var(--line)}
+.recipe summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:14px 4px}
+.recipe summary::-webkit-details-marker{display:none}
+.recipe .rn{font:700 21px/1.1 var(--display)}
+.recipe .rm{font-size:14px;color:var(--muted)}
+.recipe .kcal{font:800 22px/1 var(--display);text-align:right;color:var(--rc)}
+.recipe .kcal small{display:block;font:500 12px/1.3 var(--body);color:var(--muted)}
+.recipe .body{display:grid;grid-template-columns:1fr 1.3fr;gap:20px;padding:0 4px 18px}
+.recipe ul,.recipe ol{margin:0;padding-left:20px}
+.recipe .body h4{font:700 15px/1 var(--display);margin:0 0 6px;color:var(--rc)}
+.recipe-group h3{display:flex;align-items:center;gap:10px}
+.recipe-group h3::before{content:"";width:14px;height:14px;border-radius:3px;background:var(--rc)}
+
+/* Shopping */
+.shop-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:28px}
+.dish{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px dashed var(--line)}
+.dish .dn{font-weight:600;line-height:1.2}
+.dish .dw{font-size:13px;color:var(--muted)}
+.dish.zero .dn{color:var(--muted);font-weight:400}
+.step{display:flex;align-items:center;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.step button{width:32px;height:32px;border:0;background:none;font-weight:800;font-size:18px;cursor:pointer}
+.step span{min-width:26px;text-align:center;font:700 18px/1 var(--display)}
+.dish-g{font:700 15px/1 var(--display);margin:16px 0 4px;color:var(--muted)}
+.item{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.item.got .iname{text-decoration:line-through;color:var(--muted)}
+.item .iname{font-weight:600;line-height:1.25}
+.item .iq{font-size:13px;color:var(--muted)}
+.item .buy{font:800 20px/1 var(--display);text-align:right;white-space:nowrap}
+.item .buy small{display:block;font:500 12px/1.3 var(--body);color:var(--muted)}
+.sec-h{font:700 16px/1 var(--display);padding:8px 10px;border-radius:4px;color:#fff;margin:16px 0 2px}
+.cb{width:26px;height:26px;border-radius:5px;border:2px solid var(--line);background:var(--surface);cursor:pointer;color:transparent;font-weight:800;padding:0}
+.cb[aria-pressed="true"]{background:var(--walk);border-color:var(--walk);color:#fff}
+.mult{display:flex;align-items:center;gap:10px;margin:0 0 10px;font-weight:600}
+.counter{font:800 20px/1 var(--display);margin:8px 0 0}
+
+/* Health */
+.metas{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-bottom:12px}
+.metas div{background:var(--surface);padding:14px}
+.metas b{display:block;font:800 30px/1 var(--display)}
+.metas span{font-size:14px;color:var(--muted)}
+.inputs{display:flex;gap:14px;flex-wrap:wrap;margin:0 0 12px;font-size:14px;color:var(--muted)}
+.inputs input{width:80px;padding:6px 8px;border:1px solid var(--line);border-radius:5px;background:var(--surface);margin-left:6px}
+.check{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.check .why{font-size:14px;color:var(--muted)}
+.check select{padding:6px 8px;border:1px solid var(--line);border-radius:5px;background:var(--surface)}
+.st-Feito{background:var(--walk-soft)!important} .st-Agendado{background:var(--meal-soft)!important}
+.alert{border-left:4px solid var(--jj);background:var(--jj-soft);padding:12px 14px;border-radius:4px;margin:18px 0}
+.guide{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin:6px 0 10px}
+.guide div{border-top:3px solid var(--gcol,var(--mat));padding-top:8px}
+.guide b{font:700 19px/1.1 var(--display);display:block;margin-bottom:4px}
+.guide p{margin:0;font-size:15px;color:var(--muted)}
+.zones{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 6px}
+.zones div{padding:12px 14px;border-radius:6px}
+.zones b{font:800 26px/1 var(--display);display:block}
+footer{color:var(--muted);font-size:13px;padding:26px 0 40px;border-top:1px solid var(--line)}
+.theme-btn{background:none;border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;cursor:pointer;float:right}
+
+@media (max-width:640px){
+  .recipe .body,.shop-grid{grid-template-columns:1fr}
+  .shop-grid>div:last-child{order:-1}
+  .ex{grid-template-columns:1fr auto auto 64px 34px;gap:6px}
+  .ex input{width:64px}
+  .ex .vid span{display:none}
+  .ex input{width:70px}
+  .agenda{margin-left:52px}
+  .zones{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:no-preference){
+  .track span.now{animation:pulse 2.4s ease-in-out 1}
+  @keyframes pulse{0%{transform:scaleY(.4)}60%{transform:scaleY(1.15)}100%{transform:scaleY(1)}}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <button class="theme-btn" id="themeBtn" type="button">Tema</button>
+    <p class="date" id="heroDate"></p>
+    <h1 id="heroTitle">Semana 1 de 12</h1>
+    <p class="sub" id="heroSub"></p>
+    <div class="track" id="track" aria-label="Progresso das 12 semanas"></div>
+    <div class="track-legend"><span>Base</span><span>Consolidação</span><span>Alvo · prova de 3 km</span></div>
+  </div>
+</header>
+
+<nav aria-label="Seções"><div class="wrap" role="tablist" id="tabs"></div></nav>
+
+<main class="wrap">
+  <section id="s-hoje" role="tabpanel">
+    <h2>O dia</h2>
+    <p class="lead">Escolha o dia para ver a rotina completa. O ponto laranja marca hoje.</p>
+    <div class="chips" id="dayChips"></div>
+    <div id="dayFocus"></div>
+    <ol class="agenda" id="agenda"></ol>
+  </section>
+
+  <section id="s-horarios" role="tabpanel" hidden>
+    <h2>Horários</h2>
+    <p class="lead">Só refeições e treinos, para bater o olho. Arraste a tabela para o lado no celular.</p>
+    <div class="scroll"><table id="hTable"></table></div>
+    <p class="lead" style="margin-top:12px">Quarta: o jiu-jitsu começa na semana 5. Até lá, jantar às 19:30.</p>
+  </section>
+
+  <section id="s-corrida" role="tabpanel" hidden>
+    <h2>Corrida</h2>
+    <p class="lead">Do zero aos 3 km em 12 semanas, alternando corrida e caminhada. Cada barra mostra o treino do começo ao fim.</p>
+    <div class="guide">
+      <div style="--gcol:var(--walk)"><b>Aquece e solta</b><p>2–3 min de mobilidade e 5 min caminhando leve antes; 5 min caminhando e alongamento leve depois.</p><p style="margin-top:8px"><a class="vid" target="_blank" rel="noopener" id="vidAquec">Vídeo do aquecimento</a></p></div>
+      <div style="--gcol:var(--run)"><b>Alterna</b><p>Laranja é correr em ritmo moderado. Verde é caminhar até recuperar. Um app de timer de intervalos apita na troca.</p></div>
+      <div style="--gcol:var(--jj)"><b>Quando segurar</b><p>Esforço 8 ou mais, ou terminou muito ofegante: repita a semana. Dor no peito, tontura ou palpitação: pare e procure o médico.</p></div>
+    </div>
+    <div class="zones">
+      <div style="background:var(--walk-soft)"><b style="color:var(--walk)">Z1 · <span id="z1"></span> bpm</b>Caminhar. Fala a frase inteira sem pausa.</div>
+      <div style="background:var(--run-soft)"><b style="color:var(--run)">Z3 · <span id="z3"></span> bpm</b>Correr. Fala só frases curtas.</div>
+    </div>
+    <h3>Sua semana de corrida</h3>
+    <div class="week-pick" data-for="run"><button type="button" aria-label="Semana anterior">‹</button><span class="lbl"></span><button type="button" aria-label="Próxima semana">›</button></div>
+    <p id="runInfo"></p>
+    <div class="bar-legend"><span><b style="background:var(--walk-soft)"></b>aquece/solta</span><span><b style="background:var(--run)"></b>corre</span><span><b style="background:var(--walk)"></b>caminha</span></div>
+    <div id="runList"></div>
+  </section>
+
+  <section id="s-musculacao" role="tabpanel" hidden>
+    <h2>Musculação</h2>
+    <p class="lead">Terça treino A, quinta treino B, sexta treino C. Anote a carga e toque no círculo ao terminar o exercício. O botão vermelho abre o vídeo de execução.</p>
+    <p class="met-help"><b>Bi-set</b>: dois exercícios seguidos, descanso só no fim do par. <b>Drop-set</b>: no fim da série, tira ~30% da carga e continua. <b>Super-set</b>: como o bi-set, com músculos diferentes. <b>6/12</b>: 6 reps pesadas emendadas em 12 leves.</p>
+    <div class="week-pick" data-for="gym"><button type="button" aria-label="Semana anterior">‹</button><span class="lbl"></span><button type="button" aria-label="Próxima semana">›</button></div>
+    <p id="gymInfo"></p>
+    <div class="gym-tabs" id="gymTabs"></div>
+    <div id="gymList"></div>
+  </section>
+
+  <section id="s-receitas" role="tabpanel" hidden>
+    <h2>Receitas</h2>
+    <p class="lead">Versão rápida das receitas do guia. Toque numa receita para ver ingredientes e preparo. Valores por porção.</p>
+    <div class="chips" id="recChips"></div>
+    <div id="recList"></div>
+  </section>
+
+  <section id="s-compras" role="tabpanel" hidden>
+    <h2>Compras</h2>
+    <p class="lead">Ajuste quantas vezes vai comer cada prato. A lista recalcula na hora e mostra quantas embalagens levar.</p>
+    <div class="shop-grid">
+      <div>
+        <h3 style="margin-top:0">Cardápio da semana</h3>
+        <div id="dishList"></div>
+      </div>
+      <div>
+        <h3 style="margin-top:0">Lista</h3>
+        <div class="mult">Semanas de compra
+          <div class="step"><button type="button" id="multMinus" aria-label="Menos">−</button><span id="mult">1</span><button type="button" id="multPlus" aria-label="Mais">+</button></div>
+        </div>
+        <p class="counter" id="shopCount"></p>
+        <div id="shopList"></div>
+        <p class="lead" style="margin-top:14px;font-size:14px">Frango em peso pronto: compre cerca de 30% a mais se pesar cru. Confira também a despensa: sal, alho, cebola, azeite, temperos, canela, adoçante, café, fermento.</p>
+        <button type="button" class="chip" id="shopReset">Limpar marcações</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="s-saude" role="tabpanel" hidden>
+    <h2>Saúde</h2>
+    <p class="lead">Metas do dia a dia calculadas pelo seu peso, e o check-up para levar à consulta.</p>
+    <div class="inputs">
+      <label>Peso (kg)<input type="number" id="peso" step="0.1" inputmode="decimal"></label>
+      <label>Altura (m)<input type="number" id="altura" step="0.01" inputmode="decimal"></label>
+      <label>Idade<input type="number" id="idade" inputmode="numeric"></label>
+    </div>
+    <div class="metas" id="metas"></div>
+    <div class="alert">Até fazer o check-up, mantenha a intensidade confortável. O ideal é marcar a consulta numa manhã de teletrabalho, como a terça.</div>
+    <h3>Check-up</h3>
+    <div id="checkList"></div>
+    <p class="counter" id="checkCount"></p>
+  </section>
+</main>
+
+<footer class="wrap">Plano de 12 semanas a partir de 5/10/2026. As marcações ficam salvas neste navegador.</footer>
+
+<script>
+const D = {"rows": [["Despertar + oração / meditação", [["06:15 · 10 min oração/meditação", "esp"], ["06:00 · 10 min oração/meditação", "esp"], ["06:00 · 10 min oração/meditação", "esp"], ["06:00 · 10 min oração/meditação", "esp"], ["06:15 · 10 min oração/meditação", "esp"], ["07:00 · 15 min oração/meditação", "esp"], ["07:30 · 20 min oração/meditação (momento mais longo)", "esp"]]], ["Treino da manhã", [["—", ""], ["06:30–07:15 · CORRIDA (ver aba Corrida). Antes: ½ banana", "treino"], ["06:30–07:15 · CORRIDA (ver aba Corrida). Antes: ½ banana", "treino"], ["—", ""], ["—", ""], ["07:45–08:30 · CORRIDA (ver aba Corrida). Antes: 1 fatia de pão com mel", "treino"], ["Descanso. Opcional: caminhada leve 30–40 min", "desc"]]], ["Café da manhã", [["06:45 · 3 ovos mexidos + banana com aveia e mel + café", "ref"], ["07:30 · Mingau de aveia proteico (pós-corrida) + café", "ref"], ["07:20 · Tapioca de frango + café (pós-corrida)", "ref"], ["06:30 · 3 ovos + 1–2 fatias de pão + fruta + café", "ref"], ["06:45 · Pão de queijo fit + iogurte + fruta + café", "ref"], ["08:45 · 3 ovos mexidos + frutas variadas + café", "ref"], ["08:30 · Café com calma: ovos + pão + frutas", "ref"]]], ["Futebol do filho", [["08:00–09:00 · Levar filho ao futebol", "filho"], ["—", ""], ["08:00–09:00 · Levar filho ao futebol", "filho"], ["—", ""], ["—", ""], ["—", ""], ["—", ""]]], ["Manhã", [["Expediente presencial (8:30–11:30) ⚠ conflita com o futebol — ver observações", "pres"], ["08:30–11:30 · Teletrabalho", "tele"], ["Teletrabalho a partir das ~09:15 (usar a flexibilidade para compensar)", "tele"], ["08:30–11:30 · Expediente presencial", "pres"], ["08:30–11:30 · Expediente presencial", "pres"], ["Livre / estudo / família", "desc"], ["Livre / família / igreja (se for o caso)", "desc"]]], ["Lanche da manhã (~10:00)", [["Iogurte + fruta", "ref"], ["Fruta + castanhas", "ref"], ["Iogurte + fruta", "ref"], ["Coringa da mochila: whey ou barrinha + fruta", "ref"], ["Fruta + castanhas", "ref"], ["Fruta", "ref"], ["—", ""]]], ["Almoço", [["11:30 · Marmita ou restaurante por quilo: arroz, feijão, frango, salada", "ref"], ["11:30 · Arroz, feijão, carne, legumes, salada", "ref"], ["11:30 · Arroz, feijão, frango, salada", "ref"], ["11:30 · Marmita: frango desfiado com batata + salada", "ref"], ["11:30 · Restaurante por quilo: arroz, feijão, ovo/carne, salada", "ref"], ["12:30 · Almoço normal, prato equilibrado", "ref"], ["12:30 · Almoço livre (refeição prazer, com moderação)", "ref"]]], ["Tarde", [["12:30–17:30 · Expediente presencial", "pres"], ["12:30–17:30 · Expediente presencial", "pres"], ["12:30–17:30 · Expediente presencial", "pres"], ["12:30–17:30 · Teletrabalho", "tele"], ["12:30–17:30 · Teletrabalho", "tele"], ["Livre", "desc"], ["15:00 · Preparar 3–4 marmitas da semana + revisar a planilha", "desc"]]], ["Lanche da tarde / pré-treino", [["15:30 · Fruta + iogurte. 18:30 · PRÉ-JJ: pão com mel", "ref"], ["16:45 · PRÉ: banana com aveia (levar pronto)", "ref"], ["15:30 · Fruta + iogurte. 18:30 · PRÉ-JJ: pão com mel (sem. 5+)", "ref"], ["17:15 · PRÉ: 2 fatias de pão com mel", "ref"], ["17:00 · PRÉ: pão com banana (air fryer)", "ref"], ["16:00 · Smoothie de frutas vermelhas", "ref"], ["16:00 · Fruta + iogurte", "ref"]]], ["Treino da tarde / noite", [["19:30–21:00 · JIU-JITSU", "jj"], ["18:00–19:15 · MUSCULAÇÃO Treino A — peito, ombro, tríceps", "treino"], ["19:30–21:00 · JIU-JITSU (a partir da semana 5; sem. 1–4: descanso)", "jj"], ["18:00–19:15 · MUSCULAÇÃO Treino B — membros inferiores", "treino"], ["17:45–19:00 · MUSCULAÇÃO Treino C — costas e bíceps", "treino"], ["Descanso", "desc"], ["Descanso", "desc"]]], ["Jantar / pós-treino", [["21:15 · Leve: omelete com legumes (+ shake de whey se precisar)", "ref"], ["19:45 · Arroz + frango + ovo + salada", "ref"], ["21:15 · Frango desfiado com purê de batata (sem. 1–4: 19:30)", "ref"], ["19:45 · Escondidinho de frango fit + salada", "ref"], ["19:30 · Hambúrguer caseiro (refeição prazer da semana)", "ref"], ["19:30 · Pizza de rap 10 + salada", "ref"], ["19:30 · Macarrão de arroz com almôndegas", "ref"]]], ["Noite", [["22:15 · 5 min oração/respiração para desacelerar", "esp"], ["21:45 · Telas desligadas + 5 min gratidão/oração", "esp"], ["22:15 · 5 min oração/respiração para desacelerar", "esp"], ["21:45 · Telas desligadas + 5 min gratidão/oração", "esp"], ["22:00 · 5 min gratidão/oração", "esp"], ["22:00 · 5 min gratidão/oração", "esp"], ["21:30 · Revisão da semana que passou + oração", "esp"]]], ["Dormir (meta 7–8 h)", [["22:45", "desc"], ["22:15", "desc"], ["22:45", "desc"], ["22:15", "desc"], ["22:30", "desc"], ["23:00", "desc"], ["22:15", "desc"]]]], "recipes": {"CAFÉ DA MANHÃ": [{"nome": "Ovos mexidos + banana com aveia", "ing": ["3 ovos", "1 banana", "2 col. (sopa) de aveia", "1 fio de mel", "Frutas + café ou chá"], "passos": ["Mexa os ovos na frigideira antiaderente com uma pitada de sal (3 min).", "Amasse a banana e misture aveia e mel.", "Sirva com fruta e café."], "tempo": "10 min", "eq": "Frigideira", "kcal": null, "p": null, "c": null, "g": null, "dia": "Seg"}, {"nome": "Mingau de aveia proteico", "ing": ["40 g de aveia", "200 ml de água", "30 g de whey", "100 g de morango", "50 g de maçã picada", "Canela e adoçante a gosto"], "passos": ["Aveia + água no micro-ondas por 1 min (mais 30 s se precisar, mexendo).", "Misture o whey, a canela e o adoçante.", "Cubra com as frutas."], "tempo": "5 min", "eq": "Micro-ondas", "kcal": 492, "p": 50, "c": 55, "g": 8, "dia": "Ter (pós-corrida)"}, {"nome": "Tapioca de frango", "ing": ["100 g de goma de tapioca", "100 g de frango desfiado temperado", "30 g de mussarela light", "Alface e tomate (opcional)"], "passos": ["Espalhe a goma na frigideira em fogo baixo (~2 min).", "Vire e deixe firmar.", "Recheie com frango e queijo e dobre."], "tempo": "10 min", "eq": "Frigideira", "kcal": 510, "p": 42, "c": 73, "g": 7, "dia": "Qua"}, {"nome": "Pão de queijo fit de frigideira", "ing": ["40 g de goma de tapioca", "30 g de mussarela", "1 ovo", "Sal"], "passos": ["Misture tudo.", "Doure dos dois lados na frigideira untada.", "Corte em quadrados e leve à air fryer a 180 °C, olhando a cada 1–2 min."], "tempo": "12 min", "eq": "Frigideira + air fryer", "kcal": 340, "p": 25, "c": 20, "g": 20, "dia": "Sex"}, {"nome": "Crepe de frango", "ing": ["1 ovo", "60 g de goma de tapioca", "60 ml de leite desnatado", "Sal + ½ col. (chá) de fermento", "100 g de frango em cubos", "50 g de requeijão light"], "passos": ["Bata ovo, goma, leite, sal e fermento.", "Despeje na frigideira; após 1 min, recheie metade e dobre.", "Doure dos dois lados."], "tempo": "10 min", "eq": "Frigideira", "kcal": 472, "p": 45, "c": 42, "g": 12.5, "dia": "Opção extra"}], "PRÉ-TREINO": [{"nome": "Banana com aveia", "ing": ["1 banana", "2 col. (sopa) de aveia", "Canela (opcional)"], "passos": ["Amasse a banana e misture a aveia.", "Leve num pote para comer ~45 min antes do treino."], "tempo": "2 min", "eq": "—", "kcal": null, "p": null, "c": null, "g": null, "dia": "Ter (marmita p/ tarde)"}, {"nome": "Pão com mel", "ing": ["2 fatias de pão", "1 col. (sopa) de mel"], "passos": ["Passe o mel no pão.", "Coma 30–45 min antes (antes da corrida, 1 fatia basta)."], "tempo": "1 min", "eq": "—", "kcal": null, "p": null, "c": null, "g": null, "dia": "Seg/Qua (pré-JJ), Qui, Sáb"}, {"nome": "Pão com banana na air fryer", "ing": ["1 fatia de pão de forma", "20 g de doce de leite", "20 ml de leite desnatado", "10 g de whey", "60 g de banana", "Canela"], "passos": ["Misture doce de leite, leite e whey; espalhe no pão.", "Cubra com banana em rodelas.", "Air fryer por 5 min e finalize com canela."], "tempo": "7 min", "eq": "Air fryer", "kcal": 228, "p": 12, "c": 41, "g": 2.5, "dia": "Sex"}], "PÓS-TREINO / JANTAR": [{"nome": "Arroz + frango + ovo", "ing": ["1–2 conchas de arroz", "1 filé de frango grelhado (ou 100–150 g desfiado)", "1–2 ovos", "Salada à vontade"], "passos": ["Grelhe o frango temperado.", "Frite ou cozinhe os ovos.", "Monte o prato com arroz e salada."], "tempo": "15 min", "eq": "Fogão", "kcal": null, "p": null, "c": null, "g": null, "dia": "Ter"}, {"nome": "Batata-doce + carne moída", "ing": ["Batata-doce cozida", "Patinho moído", "Cebola, alho e tomate"], "passos": ["Cozinhe a batata-doce (ou micro-ondas 6–8 min com um pouco de água).", "Refogue a carne com os temperos.", "Sirva com salada."], "tempo": "20 min", "eq": "Fogão", "kcal": null, "p": null, "c": null, "g": null, "dia": "Opção extra"}, {"nome": "Escondidinho de frango fit (rende 4)", "ing": ["800 g de batata", "600 g de frango desfiado temperado", "120 g de mussarela", "200 ml de leite desnatado", "Sal e pimenta"], "passos": ["Cozinhe e amasse as batatas com o leite, sal e pimenta (purê).", "No refratário: frango embaixo, purê por cima, queijo no topo.", "Air fryer 180 °C ~12 min ou forno 200 °C até gratinar."], "tempo": "40 min", "eq": "Fogão + air fryer/forno", "kcal": 507, "p": 56, "c": 38, "g": 13, "dia": "Qui (fazer no domingo)"}, {"nome": "Macarrão de arroz com almôndegas", "ing": ["200 g de macarrão de arroz cozido", "150 g de patinho moído", "100 g de passata", "150 g de broto de feijão", "Cheiro-verde e temperos"], "passos": ["Modele bolinhas de carne e deixe uns minutos no congelador.", "Cozinhe o macarrão e guarde um pouco da água.", "Ferva a passata com essa água e temperos, cozinhe as almôndegas; no fim, brotos e cheiro-verde."], "tempo": "30 min", "eq": "Fogão", "kcal": 623, "p": 45, "c": 90, "g": 9, "dia": "Dom"}, {"nome": "Hambúrguer caseiro", "ing": ["130 g de patinho moído", "1 pão de hambúrguer (até 50 g)", "1 fatia de mussarela (20 g)", "Alface, tomate, molhos zero (opcional)"], "passos": ["Tempere e modele a carne.", "Grelhe na frigideira untada; queijo por cima e tampe com o fogo desligado.", "Monte no pão com salada."], "tempo": "15 min", "eq": "Frigideira", "kcal": 369, "p": 37, "c": 27, "g": 11, "dia": "Sex"}, {"nome": "Pizza de rap 10", "ing": ["1 rap 10", "Passata", "75 g de frango desfiado", "25 g de mussarela", "40 g de tomate"], "passos": ["Monte: passata, frango, queijo.", "Air fryer 180 °C por 8 min.", "Finalize com tomate fresco."], "tempo": "10 min", "eq": "Air fryer", "kcal": 370, "p": 51, "c": 15, "g": 22, "dia": "Sáb"}, {"nome": "Coxinha de frango fit", "ing": ["200 g de batata amassada", "130 g de frango desfiado temperado", "Cheiro-verde", "10 g de requeijão light"], "passos": ["Misture batata, frango e cheiro-verde.", "Modele a coxinha com o requeijão no centro.", "Air fryer 180 °C por 15 min."], "tempo": "25 min", "eq": "Air fryer", "kcal": 440, "p": 53, "c": 45, "g": 14, "dia": "Opção extra"}, {"nome": "Panqueca de carne moída", "ing": ["50 g de goma de tapioca", "1 ovo + sal", "75 g de carne moída refogada", "Passata ou ketchup zero (opcional)"], "passos": ["Misture goma, ovo e sal.", "Asse na frigideira até firmar, sem dourar.", "Enrole a carne e cubra com molho."], "tempo": "15 min", "eq": "Frigideira", "kcal": 370, "p": 37, "c": 20, "g": 24, "dia": "Opção extra"}, {"nome": "Esfiha fechada de rap 10", "ing": ["1 rap 10", "50 g de frango desfiado", "30 g de mussarela", "10 g de requeijão light", "Gema e gergelim (opcional)"], "passos": ["Frango e queijo no centro; requeijão nas bordas para colar.", "Feche em triângulo, pincele gema e gergelim.", "Air fryer 160 °C por 12 min."], "tempo": "15 min", "eq": "Air fryer", "kcal": 344, "p": 27, "c": 31, "g": 13, "dia": "Opção extra"}], "JANTAR LEVE": [{"nome": "Omelete com legumes", "ing": ["3 ovos", "Legumes picados (tomate, cebola, espinafre, abobrinha)", "Queijo (opcional)"], "passos": ["Refogue os legumes rapidamente.", "Despeje os ovos batidos com sal.", "Tampe em fogo baixo até firmar."], "tempo": "10 min", "eq": "Frigideira", "kcal": null, "p": null, "c": null, "g": null, "dia": "Seg (pós-JJ)"}, {"nome": "Frango desfiado com purê de batata", "ing": ["Frango desfiado pronto", "2–3 batatas", "Um pouco de leite desnatado, sal"], "passos": ["Cozinhe e amasse as batatas com leite e sal.", "Aqueça o frango.", "Sirva com salada."], "tempo": "20 min", "eq": "Fogão", "kcal": null, "p": null, "c": null, "g": null, "dia": "Qua (pós-JJ)"}, {"nome": "Salada + carne + arroz integral", "ing": ["Folhas e legumes à vontade", "1 bife ou carne magra", "1 concha de arroz integral"], "passos": ["Grelhe a carne.", "Monte o prato."], "tempo": "15 min", "eq": "Fogão", "kcal": null, "p": null, "c": null, "g": null, "dia": "Opção extra"}], "LANCHES E SOBREMESAS": [{"nome": "Smoothie de frutas vermelhas", "ing": ["30 g banana + 50 g manga + 60 g morango + 30 g mirtilo (congelados)", "90 g de iogurte grego desnatado", "30 g de whey", "Por cima: morango, amora, banana"], "passos": ["Bata tudo até ficar cremoso.", "Sirva num bowl com as frutas por cima."], "tempo": "5 min", "eq": "Liquidificador", "kcal": 392, "p": 32.5, "c": 64, "g": 3, "dia": "Sáb (lanche)"}, {"nome": "Bolo de caneca", "ing": ["40 g de farinha de aveia", "20 g de cacau em pó", "5 g de fermento", "60 ml de leite desnatado", "25 g de whey baunilha", "5 g de adoçante culinário"], "passos": ["Misture os secos.", "Junte leite, whey e adoçante.", "Na caneca, micro-ondas por 1 min."], "tempo": "3 min", "eq": "Micro-ondas", "kcal": 280, "p": 40, "c": 30, "g": 5, "dia": "Sobremesa"}, {"nome": "Mousse de maracujá fit", "ing": ["250 g de iogurte natural desnatado (gelado)", "30 g de whey sabor maracujá", "50 g de polpa de maracujá (gelada)", "Adoçante (opcional)"], "passos": ["Misture iogurte, whey e adoçante até ficar liso.", "Cubra com a polpa."], "tempo": "5 min", "eq": "—", "kcal": 268, "p": 34, "c": 29, "g": 2.5, "dia": "Sobremesa"}, {"nome": "Sorvete de morango fit", "ing": ["200 g de morango congelado", "20 g de whey sabor creme", "Água aos poucos"], "passos": ["Bata morango e whey, adicionando água até ficar cremoso e crescer."], "tempo": "5 min", "eq": "Liquidificador", "kcal": 147, "p": 16, "c": 22, "g": 0, "dia": "Sobremesa"}, {"nome": "Barrinha de proteína (por unidade)", "ing": ["200 g de whey", "100 g de farinha de aveia", "50 g de farinha de amêndoas", "30 g de chocolate ao leite picado", "20 g de óleo de coco + 10 g de mel", "1 col. (sopa) de fermento + pitada de sal"], "passos": ["Misture os secos; junte óleo de coco e mel (se ficar seca demais, um pouco de leite).", "Adicione o chocolate e prense numa forma.", "Forno 180 °C por 15–20 min; esfrie e corte."], "tempo": "30 min", "eq": "Forno", "kcal": 140, "p": 10, "c": 20, "g": 8, "dia": "Coringa da mochila"}], "PREPARO DE DOMINGO (BASES E MARMITAS)": [{"nome": "Frango desfiado (base de várias receitas)", "ing": ["1 kg de peito de frango", "Sal, alho, cebola, louro"], "passos": ["Cozinhe na pressão com água e temperos (~20 min após pegar pressão).", "Desfie com dois garfos (ou na batedeira).", "Separe em potes de ~100 g; geladeira 3 dias ou congelar."], "tempo": "35 min", "eq": "Panela de pressão", "kcal": null, "p": null, "c": null, "g": null, "dia": "Dom"}, {"nome": "Kit de 3–4 marmitas", "ing": ["Arroz e feijão em quantidade", "Carne ou frango", "Ovos cozidos", "Legumes no vapor ou batata"], "passos": ["Cozinhe tudo de uma vez.", "Monte potes: arroz + carne + legume; frango + batata; feijão + ovos.", "Congele; 1–2 min no micro-ondas na hora de comer."], "tempo": "1 h 30", "eq": "Fogão", "kcal": null, "p": null, "c": null, "g": null, "dia": "Dom (para seg–qua)"}]}, "ings": [{"n": "Banana", "u": "unid", "s": "HORTIFRUTI", "pack": 1, "plab": "unid"}, {"n": "Frutas variadas (maçã, laranja, mamão…)", "u": "porção", "s": "HORTIFRUTI", "pack": 1, "plab": "porção"}, {"n": "Maçã (para o mingau)", "u": "unid", "s": "HORTIFRUTI", "pack": 1, "plab": "unid"}, {"n": "Morango (fresco ou congelado)", "u": "g", "s": "HORTIFRUTI", "pack": 250, "plab": "bandeja ~250 g"}, {"n": "Manga congelada", "u": "g", "s": "HORTIFRUTI", "pack": 300, "plab": "pacote ~300 g"}, {"n": "Frutas vermelhas congeladas (mirtilo/amora)", "u": "g", "s": "HORTIFRUTI", "pack": 300, "plab": "pacote ~300 g"}, {"n": "Polpa de maracujá", "u": "g", "s": "HORTIFRUTI", "pack": 100, "plab": "polpa 100 g"}, {"n": "Legumes (abobrinha, cenoura, brócolis…)", "u": "g", "s": "HORTIFRUTI", "pack": 500, "plab": "~500 g"}, {"n": "Folhas para salada", "u": "porção", "s": "HORTIFRUTI", "pack": 3, "plab": "maço/pé (~3 porções)"}, {"n": "Tomate", "u": "unid", "s": "HORTIFRUTI", "pack": 1, "plab": "unid"}, {"n": "Batata inglesa", "u": "g", "s": "HORTIFRUTI", "pack": 1000, "plab": "kg"}, {"n": "Batata-doce", "u": "g", "s": "HORTIFRUTI", "pack": 1000, "plab": "kg"}, {"n": "Broto de feijão", "u": "g", "s": "HORTIFRUTI", "pack": 200, "plab": "bandeja ~200 g"}, {"n": "Cheiro-verde", "u": "maço", "s": "HORTIFRUTI", "pack": 1, "plab": "maço"}, {"n": "Peito de frango", "u": "g", "s": "AÇOUGUE", "pack": 1000, "plab": "kg"}, {"n": "Patinho moído", "u": "g", "s": "AÇOUGUE", "pack": 500, "plab": "bandeja 500 g"}, {"n": "Carne para bife (patinho/alcatra)", "u": "g", "s": "AÇOUGUE", "pack": 500, "plab": "~500 g"}, {"n": "Ovos", "u": "unid", "s": "OVOS E LATICÍNIOS", "pack": 12, "plab": "dúzia"}, {"n": "Iogurte natural/grego desnatado", "u": "g", "s": "OVOS E LATICÍNIOS", "pack": 170, "plab": "pote 170 g"}, {"n": "Leite desnatado", "u": "ml", "s": "OVOS E LATICÍNIOS", "pack": 1000, "plab": "caixa 1 L"}, {"n": "Mussarela (light quando possível)", "u": "g", "s": "OVOS E LATICÍNIOS", "pack": 150, "plab": "pacote ~150 g"}, {"n": "Requeijão light", "u": "g", "s": "OVOS E LATICÍNIOS", "pack": 200, "plab": "copo ~200 g"}, {"n": "Pão de forma", "u": "fatia", "s": "PADARIA E MERCEARIA", "pack": 20, "plab": "pacote ~20 fatias"}, {"n": "Pão de hambúrguer", "u": "unid", "s": "PADARIA E MERCEARIA", "pack": 4, "plab": "pacote 4 un"}, {"n": "Rap 10", "u": "unid", "s": "PADARIA E MERCEARIA", "pack": 6, "plab": "pacote"}, {"n": "Goma de tapioca", "u": "g", "s": "PADARIA E MERCEARIA", "pack": 500, "plab": "pacote 500 g"}, {"n": "Aveia em flocos", "u": "g", "s": "PADARIA E MERCEARIA", "pack": 500, "plab": "~500 g"}, {"n": "Farinha de aveia", "u": "g", "s": "PADARIA E MERCEARIA", "pack": 500, "plab": "~500 g"}, {"n": "Mel", "u": "g", "s": "PADARIA E MERCEARIA", "pack": 300, "plab": "pote ~300 g"}, {"n": "Arroz (cru)", "u": "g", "s": "PADARIA E MERCEARIA", "pack": 1000, "plab": "pacote 1 kg"}, {"n": "Feijão (cru)", "u": "g", "s": "PADARIA E MERCEARIA", "pack": 1000, "plab": "pacote 1 kg"}, {"n": "Macarrão de arroz (cru)", "u": "g", "s": "PADARIA E MERCEARIA", "pack": 200, "plab": "pacote ~200 g"}, {"n": "Passata de tomate", "u": "g", "s": "PADARIA E MERCEARIA", "pack": 500, "plab": "~500 g"}, {"n": "Doce de leite", "u": "g", "s": "PADARIA E MERCEARIA", "pack": 400, "plab": "pote ~400 g"}, {"n": "Castanhas / mix de nuts", "u": "g", "s": "PADARIA E MERCEARIA", "pack": 200, "plab": "pacote ~200 g"}, {"n": "Cacau em pó", "u": "g", "s": "PADARIA E MERCEARIA", "pack": 200, "plab": "~200 g"}, {"n": "Farinha de amêndoas", "u": "g", "s": "PADARIA E MERCEARIA", "pack": 200, "plab": "~200 g"}, {"n": "Chocolate ao leite", "u": "g", "s": "PADARIA E MERCEARIA", "pack": 90, "plab": "barra ~90 g"}, {"n": "Óleo de coco", "u": "g", "s": "PADARIA E MERCEARIA", "pack": 200, "plab": "pote ~200 g"}, {"n": "Whey protein", "u": "g", "s": "SUPLEMENTOS", "pack": 900, "plab": "pote ~900 g"}], "dishes": [{"g": "CAFÉ DA MANHÃ", "n": "Ovos mexidos + banana com aveia e mel", "onde": "Seg", "v": 1, "ing": {"17": 3, "0": 1, "26": 20, "28": 10, "1": 1}}, {"g": "CAFÉ DA MANHÃ", "n": "Ovos + pão + fruta", "onde": "Qui, Sáb, Dom", "v": 3, "ing": {"17": 3, "22": 2, "1": 1}}, {"g": "CAFÉ DA MANHÃ", "n": "Mingau de aveia proteico", "onde": "Ter", "v": 1, "ing": {"26": 40, "39": 30, "3": 100, "2": 0.5}}, {"g": "CAFÉ DA MANHÃ", "n": "Tapioca de frango", "onde": "Qua", "v": 1, "ing": {"25": 100, "14": 100, "20": 30, "9": 0.5}}, {"g": "CAFÉ DA MANHÃ", "n": "Pão de queijo fit + iogurte + fruta", "onde": "Sex", "v": 1, "ing": {"25": 40, "20": 30, "17": 1, "18": 170, "1": 1}}, {"g": "CAFÉ DA MANHÃ", "n": "Crepe de frango", "onde": "extra", "v": 0, "ing": {"17": 1, "25": 60, "19": 60, "14": 100, "21": 50}}, {"g": "PRÉ-TREINO", "n": "½ banana antes da corrida", "onde": "Ter, Qua", "v": 2, "ing": {"0": 0.5}}, {"g": "PRÉ-TREINO", "n": "Banana com aveia", "onde": "Ter", "v": 1, "ing": {"0": 1, "26": 20}}, {"g": "PRÉ-TREINO", "n": "Pão com mel", "onde": "Seg, Qui, Sáb (+Qua da sem. 5)", "v": 3, "ing": {"22": 2, "28": 15}}, {"g": "PRÉ-TREINO", "n": "Pão com banana na air fryer", "onde": "Sex", "v": 1, "ing": {"22": 1, "33": 20, "19": 20, "39": 10, "0": 0.6}}, {"g": "LANCHES", "n": "Iogurte + fruta", "onde": "Seg, Qua, Dom…", "v": 5, "ing": {"18": 170, "1": 1}}, {"g": "LANCHES", "n": "Fruta + castanhas", "onde": "Ter, Sex", "v": 2, "ing": {"1": 1, "34": 30}}, {"g": "LANCHES", "n": "Whey + fruta (coringa)", "onde": "Qui", "v": 1, "ing": {"39": 30, "1": 1}}, {"g": "LANCHES", "n": "Smoothie de frutas vermelhas", "onde": "Sáb", "v": 1, "ing": {"0": 0.8, "4": 50, "3": 90, "5": 60, "18": 90, "39": 30}}, {"g": "LANCHES", "n": "Bolo de caneca", "onde": "extra", "v": 0, "ing": {"27": 40, "35": 20, "19": 60, "39": 25}}, {"g": "LANCHES", "n": "Mousse de maracujá fit", "onde": "extra", "v": 0, "ing": {"18": 250, "39": 30, "6": 50}}, {"g": "LANCHES", "n": "Sorvete de morango fit", "onde": "extra", "v": 0, "ing": {"3": 200, "39": 20}}, {"g": "LANCHES", "n": "Barrinhas de proteína (fornada)", "onde": "extra", "v": 0, "ing": {"39": 200, "27": 100, "36": 50, "37": 30, "38": 20, "28": 10}}, {"g": "ALMOÇO", "n": "Arroz, feijão, frango e salada", "onde": "Seg, Qua, Sáb", "v": 3, "ing": {"29": 80, "30": 50, "14": 150, "8": 0.33, "9": 0.5}}, {"g": "ALMOÇO", "n": "Arroz, feijão, carne, legumes e salada", "onde": "Ter", "v": 1, "ing": {"29": 80, "30": 50, "16": 150, "7": 100, "8": 0.33}}, {"g": "ALMOÇO", "n": "Marmita: frango desfiado com batata", "onde": "Qui", "v": 1, "ing": {"14": 150, "10": 200, "8": 0.33}}, {"g": "JANTAR", "n": "Omelete com legumes", "onde": "Seg", "v": 1, "ing": {"17": 3, "7": 150, "20": 20}}, {"g": "JANTAR", "n": "Arroz + frango + ovo", "onde": "Ter", "v": 1, "ing": {"29": 80, "14": 150, "17": 2, "8": 0.33}}, {"g": "JANTAR", "n": "Frango desfiado com purê", "onde": "Qua", "v": 1, "ing": {"14": 150, "10": 250, "19": 50, "8": 0.33}}, {"g": "JANTAR", "n": "Escondidinho de frango (por porção)", "onde": "Qui", "v": 1, "ing": {"10": 200, "14": 150, "20": 30, "19": 50}}, {"g": "JANTAR", "n": "Hambúrguer caseiro", "onde": "Sex", "v": 1, "ing": {"15": 130, "23": 1, "20": 20, "9": 0.5, "8": 0.2}}, {"g": "JANTAR", "n": "Pizza de rap 10", "onde": "Sáb", "v": 1, "ing": {"24": 1, "32": 40, "14": 75, "20": 25, "9": 0.5}}, {"g": "JANTAR", "n": "Macarrão de arroz com almôndegas", "onde": "Dom", "v": 1, "ing": {"31": 80, "15": 150, "32": 100, "12": 150, "13": 0.5}}, {"g": "JANTAR", "n": "Batata-doce + carne moída", "onde": "extra", "v": 0, "ing": {"11": 200, "15": 150, "9": 0.5}}, {"g": "JANTAR", "n": "Coxinha de frango fit", "onde": "extra", "v": 0, "ing": {"10": 200, "14": 130, "21": 10, "13": 0.2}}, {"g": "JANTAR", "n": "Panqueca de carne moída", "onde": "extra", "v": 0, "ing": {"25": 50, "17": 1, "15": 75, "32": 30}}, {"g": "JANTAR", "n": "Esfiha fechada de rap 10", "onde": "extra", "v": 0, "ing": {"24": 1, "14": 50, "20": 30, "21": 10}}, {"g": "JANTAR", "n": "Salada + carne + arroz integral", "onde": "extra", "v": 0, "ing": {"16": 150, "29": 70, "8": 0.5, "9": 0.5}}], "gym": {"1": {"A": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Bi-set", [["Flexão no solo", 3, 15], ["Elevação lateral", 3, 15]]], ["Bi-set", [["Supino reto", 3, 15], ["Elevação frontal", 3, 15]]], ["Bi-set", [["Supino inclinado c/ halteres", 3, 15], ["Flexão militar", 3, 15]]], ["Bi-set", [["Voador polia alta", 3, 15], ["Tríceps coice c/ halteres", 3, 15]]]], "B": [["Aquecimento", [["Mobilidade de inferiores", "—", "—"], ["Agachamento c/ peso do corpo", 3, 15]]], ["Meta de repetição", [["Cadeira extensora", 3, 15]]], ["Meta de repetição", [["Leg press 45", 3, 15]]], ["Meta de repetição", [["Mesa flexora", 3, 15]]], ["Meta de repetição", [["Agachamento hack", 3, 15]]], ["Bi-set", [["Cadeira abdutora", 3, 15], ["Panturrilha em pé", 3, 15]]]], "C": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["6 pesada / 12 leve", [["Remada cavalinho", 3, "6 / 12"]]], ["Bi-set", [["Puxada alta", 3, 15], ["Remada c/ halteres", 3, 15]]], ["Bi-set", [["Crucifixo invertido c/ halteres", 3, 15], ["Remada baixa", 3, 15]]], ["Meta de repetição", [["Bíceps martelo", 3, 15]]]]}, "2": {"A": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Bi-set", [["Flexão no solo", 3, 12], ["Elevação lateral", 3, 12]]], ["Bi-set", [["Supino reto", 3, 12], ["Elevação frontal", 3, 12]]], ["Bi-set", [["Supino inclinado c/ halteres", 3, 12], ["Flexão militar", 3, 12]]], ["Bi-set", [["Voador polia alta", 3, 12], ["Tríceps coice c/ halteres", 3, 12]]]], "B": [["Aquecimento", [["Mobilidade de inferiores", "—", "—"], ["Agachamento c/ peso do corpo", 3, 15]]], ["Meta de repetição", [["Cadeira extensora", 3, 12]]], ["Meta de repetição", [["Leg press 45", 3, 12]]], ["Meta de repetição", [["Mesa flexora", 3, 12]]], ["Meta de repetição", [["Agachamento hack", 3, 12]]], ["Bi-set", [["Cadeira abdutora", 3, 12], ["Panturrilha em pé", 3, 12]]]], "C": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["6 pesada / 12 leve", [["Remada cavalinho", 3, "6 / 12"]]], ["Bi-set", [["Puxada alta", 3, 12], ["Remada c/ halteres", 3, 12]]], ["Bi-set", [["Crucifixo invertido c/ halteres", 3, 12], ["Remada baixa", 3, 12]]], ["Meta de repetição", [["Bíceps martelo", 3, 12]]]]}, "3": {"A": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Bi-set", [["Flexão no solo", 3, 10], ["Elevação lateral", 3, 10]]], ["Bi-set", [["Supino reto", 3, 10], ["Elevação frontal", 3, 10]]], ["Bi-set", [["Supino inclinado c/ halteres", 3, 10], ["Flexão militar", 3, 10]]], ["Bi-set", [["Voador polia alta", 3, 10], ["Tríceps coice c/ halteres", 3, 10]]]], "B": [["Aquecimento", [["Mobilidade de inferiores", "—", "—"], ["Agachamento c/ peso do corpo", 3, 15]]], ["Meta de repetição", [["Cadeira extensora", 3, 10]]], ["Meta de repetição", [["Leg press 45", 3, 10]]], ["Meta de repetição", [["Mesa flexora", 3, 10]]], ["Meta de repetição", [["Agachamento hack", 3, 10]]], ["Bi-set", [["Cadeira abdutora", 3, 10], ["Panturrilha em pé", 3, 10]]]], "C": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["6 pesada / 12 leve", [["Remada cavalinho", 3, "6 / 12"]]], ["Bi-set", [["Puxada alta", 3, 10], ["Remada c/ halteres", 3, 10]]], ["Bi-set", [["Crucifixo invertido c/ halteres", 3, 10], ["Remada baixa", 3, 10]]], ["Meta de repetição", [["Bíceps martelo", 3, 10]]]]}, "4": {"A": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Bi-set", [["Flexão no solo", 3, 15], ["Elevação lateral", 3, 15]]], ["Bi-set", [["Supino reto", 3, 15], ["Elevação frontal", 3, 15]]], ["Bi-set", [["Supino inclinado c/ halteres", 3, 15], ["Flexão militar", 3, 15]]], ["Bi-set", [["Voador polia alta", 3, 15], ["Tríceps coice c/ halteres", 3, 15]]]], "B": [["Aquecimento", [["Mobilidade de inferiores", "—", "—"], ["Agachamento c/ peso do corpo", 3, 15]]], ["Meta de repetição", [["Cadeira extensora", 3, 15]]], ["Meta de repetição", [["Leg press 45", 3, 15]]], ["Meta de repetição", [["Mesa flexora", 3, 15]]], ["Meta de repetição", [["Agachamento hack", 3, 15]]], ["Bi-set", [["Cadeira abdutora", 3, 15], ["Panturrilha em pé", 3, 15]]]], "C": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["6 pesada / 12 leve", [["Remada cavalinho", 3, "6 / 12"]]], ["Bi-set", [["Puxada alta", 3, 15], ["Remada c/ halteres", 3, 15]]], ["Bi-set", [["Crucifixo invertido c/ halteres", 3, 15], ["Remada baixa", 3, 15]]], ["Meta de repetição", [["Bíceps martelo", 3, 15]]]]}, "5": {"A": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Bi-set", [["Supino reto", 3, 12], ["Elevação frontal", 3, 12]]], ["Bi-set", [["Crucifixo reto", 3, 12], ["Elevação lateral", 3, 12]]], ["Bi-set", [["Supino inclinado c/ halteres", 3, 12], ["Flexão militar", 3, 12]]], ["Bi-set", [["Voador polia alta", 3, 12], ["Tríceps coice c/ halteres", 3, 12]]]], "B": [["Aquecimento", [["Mobilidade de inferiores", "—", "—"], ["Agachamento c/ peso do corpo", 3, 15]]], ["Meta de repetição", [["Agachamento hack", 3, 12]]], ["Bi-set", [["Cadeira extensora", 3, 12], ["Agachamento frontal c/ halteres", 3, 12]]], ["Meta de repetição", [["Leg press 45", 3, 12]]], ["Meta de repetição", [["Mesa flexora", 3, 15]]], ["Bi-set", [["Cadeira abdutora", 3, 15], ["Panturrilha em pé", 3, 15]]]], "C": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Bi-set", [["Crucifixo invertido c/ halteres", 3, 15], ["Remada baixa", 3, 12]]], ["Drop-set", [["Remada supinada", 3, 12]]], ["Bi-set", [["Puxada alta", 3, 12], ["Remada c/ halteres", 3, 12]]], ["Super-set", [["Rosca bíceps", 3, 12], ["Encolhimento c/ halteres", 3, 15]]]]}, "6": {"A": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Bi-set", [["Supino reto", 3, 10], ["Elevação frontal", 3, 10]]], ["Bi-set", [["Crucifixo reto", 3, 10], ["Elevação lateral", 3, 10]]], ["Bi-set", [["Supino inclinado c/ halteres", 3, 10], ["Flexão militar", 3, 10]]], ["Bi-set", [["Voador polia alta", 3, 10], ["Tríceps coice c/ halteres", 3, 10]]]], "B": [["Aquecimento", [["Mobilidade de inferiores", "—", "—"], ["Agachamento c/ peso do corpo", 3, 15]]], ["Meta de repetição", [["Agachamento hack", 3, 10]]], ["Bi-set", [["Cadeira extensora", 3, 10], ["Agachamento frontal c/ halteres", 3, 10]]], ["Meta de repetição", [["Leg press 45", 3, 10]]], ["Meta de repetição", [["Mesa flexora", 3, 15]]], ["Bi-set", [["Cadeira abdutora", 3, 15], ["Panturrilha em pé", 3, 15]]]], "C": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Bi-set", [["Crucifixo invertido c/ halteres", 3, 12], ["Remada baixa", 3, 10]]], ["Drop-set", [["Remada supinada", 3, 10]]], ["Bi-set", [["Puxada alta", 3, 10], ["Remada c/ halteres", 3, 10]]], ["Super-set", [["Rosca bíceps", 3, 10], ["Encolhimento c/ halteres", 3, 12]]]]}, "7": {"A": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Bi-set", [["Supino reto", 3, 8], ["Elevação frontal", 3, 8]]], ["Bi-set", [["Crucifixo reto", 3, 8], ["Elevação lateral", 3, 8]]], ["Bi-set", [["Supino inclinado c/ halteres", 3, 8], ["Flexão militar", 3, 8]]], ["Bi-set", [["Voador polia alta", 3, 8], ["Tríceps coice c/ halteres", 3, 8]]]], "B": [["Aquecimento", [["Mobilidade de inferiores", "—", "—"], ["Agachamento c/ peso do corpo", 3, 15]]], ["Meta de repetição", [["Agachamento hack", 3, 8]]], ["Bi-set", [["Cadeira extensora", 3, 8], ["Agachamento frontal c/ halteres", 3, 8]]], ["Meta de repetição", [["Leg press 45", 3, 8]]], ["Meta de repetição", [["Mesa flexora", 3, 12]]], ["Bi-set", [["Cadeira abdutora", 3, 12], ["Panturrilha em pé", 3, 12]]]], "C": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Bi-set", [["Crucifixo invertido c/ halteres", 3, 12], ["Remada baixa", 3, 10]]], ["Drop-set", [["Remada supinada", 3, 10]]], ["Bi-set", [["Puxada alta", 3, 10], ["Remada c/ halteres", 3, 10]]], ["Super-set", [["Rosca bíceps", 3, 10], ["Encolhimento c/ halteres", 3, 12]]]]}, "8": {"A": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Bi-set", [["Supino reto", 3, 12], ["Elevação frontal", 3, 12]]], ["Bi-set", [["Crucifixo reto", 3, 12], ["Elevação lateral", 3, 12]]], ["Bi-set", [["Supino inclinado c/ halteres", 3, 12], ["Flexão militar", 3, 12]]], ["Bi-set", [["Voador polia alta", 3, 12], ["Tríceps coice c/ halteres", 3, 12]]]], "B": [["Aquecimento", [["Mobilidade de inferiores", "—", "—"], ["Agachamento c/ peso do corpo", 3, 15]]], ["Meta de repetição", [["Agachamento hack", 3, 12]]], ["Bi-set", [["Cadeira extensora", 3, 12], ["Agachamento frontal c/ halteres", 3, 12]]], ["Meta de repetição", [["Leg press 45", 3, 12]]], ["Meta de repetição", [["Mesa flexora", 3, 15]]], ["Bi-set", [["Cadeira abdutora", 3, 15], ["Panturrilha em pé", 3, 15]]]], "C": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Bi-set", [["Crucifixo invertido c/ halteres", 3, 15], ["Remada baixa", 3, 12]]], ["Drop-set", [["Remada supinada", 3, 12]]], ["Bi-set", [["Puxada alta", 3, 12], ["Remada c/ halteres", 3, 12]]], ["Super-set", [["Rosca bíceps", 3, 12], ["Encolhimento c/ halteres", 3, 15]]]]}, "9": {"A": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Bi-set", [["Peck deck", 3, 10], ["Flexão c/ ponto zero", 3, "até a falha"]]], ["Bi-set", [["Supino reto", 3, 10], ["Elevação frontal", 3, 10]]], ["Bi-set", [["Crucifixo inclinado", 3, 10], ["Elevação lateral", 3, 10]]], ["Bi-set", [["Voador polia alta", 3, 10], ["Tríceps coice c/ halteres", 3, 10]]]], "B": [["Aquecimento", [["Mobilidade de inferiores", "—", "—"], ["Agachamento c/ peso do corpo", 3, 15]]], ["Meta de repetição", [["Agachamento hack", 3, 10]]], ["Drop-set", [["Cadeira extensora", 3, "6 + 12"]]], ["Bi-set", [["Leg press 45", 3, 10], ["Recuo c/ halteres", 3, 12]]], ["Meta de repetição", [["Mesa flexora", 3, 12]]], ["Bi-set", [["Cadeira abdutora", 3, 15], ["Panturrilha em pé", 3, 15]]]], "C": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Meta de repetição", [["Remada curvada c/ barra", 3, 10]]], ["Meta de repetição", [["Serrote c/ halteres", 3, 10]]], ["Bi-set", [["Puxada alta", 3, 10], ["Remada c/ halteres", 3, 10]]], ["Super-set", [["Rosca bíceps", 3, 10], ["Encolhimento c/ halteres", 3, 12]]], ["Meta de repetição", [["Bíceps martelo", 3, 10]]]]}, "10": {"A": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Bi-set", [["Peck deck", 3, 10], ["Flexão c/ ponto zero", 3, "até a falha"]]], ["Bi-set", [["Supino reto", 3, 10], ["Elevação frontal", 3, 10]]], ["Bi-set", [["Crucifixo inclinado", 3, 10], ["Elevação lateral", 3, 10]]], ["Bi-set", [["Voador polia alta", 3, 10], ["Tríceps coice c/ halteres", 3, 10]]]], "B": [["Aquecimento", [["Mobilidade de inferiores", "—", "—"], ["Agachamento c/ peso do corpo", 3, 15]]], ["Meta de repetição", [["Agachamento hack", 3, 10]]], ["Drop-set", [["Cadeira extensora", 3, 10]]], ["Bi-set", [["Leg press 45", 3, 10], ["Recuo c/ halteres", 3, 12]]], ["Meta de repetição", [["Mesa flexora", 3, 12]]], ["Bi-set", [["Cadeira abdutora", 3, 15], ["Panturrilha em pé", 3, 15]]]], "C": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Meta de repetição", [["Remada curvada c/ barra", 3, 10]]], ["Meta de repetição", [["Serrote c/ halteres", 3, 10]]], ["Bi-set", [["Puxada alta", 3, 10], ["Remada c/ halteres", 3, 10]]], ["Super-set", [["Rosca bíceps", 3, 10], ["Encolhimento c/ halteres", 3, 12]]], ["Meta de repetição", [["Bíceps martelo", 3, 10]]]]}, "11": {"A": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Bi-set", [["Peck deck", 3, 8], ["Flexão c/ ponto zero", 3, "até a falha"]]], ["Bi-set", [["Supino reto", 3, 8], ["Elevação frontal", 3, 8]]], ["Bi-set", [["Crucifixo inclinado", 3, 8], ["Elevação lateral", 3, 8]]], ["Bi-set", [["Voador polia alta", 3, 8], ["Tríceps coice c/ halteres", 3, 8]]]], "B": [["Aquecimento", [["Mobilidade de inferiores", "—", "—"], ["Agachamento c/ peso do corpo", 3, 15]]], ["Meta de repetição", [["Agachamento hack", 3, 8]]], ["Drop-set", [["Cadeira extensora", 3, 8]]], ["Bi-set", [["Leg press 45", 3, 8], ["Recuo c/ halteres", 3, 10]]], ["Meta de repetição", [["Mesa flexora", 3, 10]]], ["Bi-set", [["Cadeira abdutora", 3, 12], ["Panturrilha em pé", 3, 12]]]], "C": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Meta de repetição", [["Remada curvada c/ barra", 3, 8]]], ["Meta de repetição", [["Serrote c/ halteres", 3, 8]]], ["Bi-set", [["Puxada alta", 3, 8], ["Remada c/ halteres", 3, 8]]], ["Super-set", [["Rosca bíceps", 3, 8], ["Encolhimento c/ halteres", 3, 10]]], ["Meta de repetição", [["Bíceps martelo", 3, 8]]]]}, "12": {"A": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Bi-set", [["Peck deck", 3, 15], ["Flexão c/ ponto zero", 3, "até a falha"]]], ["Bi-set", [["Supino reto", 3, 15], ["Elevação frontal", 3, 15]]], ["Bi-set", [["Crucifixo inclinado", 3, 15], ["Elevação lateral", 3, 15]]], ["Bi-set", [["Voador polia alta", 3, 15], ["Tríceps coice c/ halteres", 3, 15]]]], "B": [["Aquecimento", [["Mobilidade de inferiores", "—", "—"], ["Agachamento c/ peso do corpo", 3, 15]]], ["Meta de repetição", [["Agachamento hack", 3, 15]]], ["Meta de repetição", [["Cadeira extensora", 3, 15]]], ["Bi-set", [["Leg press 45", 3, 15], ["Recuo c/ halteres", 3, 15]]], ["Meta de repetição", [["Mesa flexora", 3, 15]]], ["Bi-set", [["Cadeira abdutora", 3, 15], ["Panturrilha em pé", 3, 15]]]], "C": [["Aquecimento", [["Mobilidade de superiores", "—", "—"]]], ["Meta de repetição", [["Remada curvada c/ barra", 3, 15]]], ["Meta de repetição", [["Serrote c/ halteres", 3, 15]]], ["Bi-set", [["Puxada alta", 3, 15], ["Remada c/ halteres", 3, 15]]], ["Super-set", [["Rosca bíceps", 3, 15], ["Encolhimento c/ halteres", 3, 15]]], ["Meta de repetição", [["Bíceps martelo", 3, 15]]]]}}, "gymFoco": {"1": "Adaptação — cargas leves, foco na técnica", "2": "Sobe um pouco a carga (12 reps)", "3": "Mais carga, menos reps (10)", "4": "Volta a 15 reps — semana mais leve", "5": "Novos exercícios e métodos", "6": "Mais carga (10 reps)", "7": "Semana mais pesada (8 reps)", "8": "Alívio — volta a 12 reps", "9": "Etapa alvo: novos estímulos", "10": "Mantém e consolida cargas", "11": "Semana mais pesada (8 reps)", "12": "Fechamento — 15 reps, carga moderada"}, "run": {"1": [{"dia": "Terça", "n": 7, "run": 0.5, "walk": 1.5}, {"dia": "Quarta", "n": 7, "run": 0.75, "walk": 1.5}, {"dia": "Sábado", "n": 7, "run": 1, "walk": 1}], "2": [{"dia": "Terça", "n": 8, "run": 0.5, "walk": 1.5}, {"dia": "Quarta", "n": 8, "run": 0.75, "walk": 1.5}, {"dia": "Sábado", "n": 8, "run": 1, "walk": 1}], "3": [{"dia": "Terça", "n": 9, "run": 0.5, "walk": 1.5}, {"dia": "Quarta", "n": 9, "run": 0.75, "walk": 1.5}, {"dia": "Sábado", "n": 9, "run": 1, "walk": 1}], "4": [{"dia": "Terça", "n": 7, "run": 0.5, "walk": 1.5}, {"dia": "Quarta", "n": 7, "run": 0.75, "walk": 1.5}, {"dia": "Sábado", "n": 7, "run": 1, "walk": 1}], "5": [{"dia": "Terça", "n": 5, "run": 1, "walk": 2}, {"dia": "Quarta", "n": 5, "run": 1.5, "walk": 1.5}, {"dia": "Sábado", "n": 5, "run": 2, "walk": 1}], "6": [{"dia": "Terça", "n": 6, "run": 1, "walk": 2}, {"dia": "Quarta", "n": 6, "run": 1.5, "walk": 1.5}, {"dia": "Sábado", "n": 6, "run": 2, "walk": 1}], "7": [{"dia": "Terça", "n": 7, "run": 1, "walk": 2}, {"dia": "Quarta", "n": 7, "run": 1.5, "walk": 1.5}, {"dia": "Sábado", "n": 7, "run": 2, "walk": 1}], "8": [{"dia": "Terça", "n": 5, "run": 1, "walk": 2}, {"dia": "Quarta", "n": 5, "run": 1.5, "walk": 1.5}, {"dia": "Sábado", "n": 5, "run": 2, "walk": 1}], "9": [{"dia": "Terça", "n": 4, "run": 2, "walk": 3}, {"dia": "Quarta", "n": 4, "run": 3, "walk": 2}, {"dia": "Sábado", "n": 4, "run": 4, "walk": 1}], "10": [{"dia": "Terça", "n": 5, "run": 2, "walk": 3}, {"dia": "Quarta", "n": 5, "run": 3, "walk": 2}, {"dia": "Sábado", "n": 5, "run": 4, "walk": 1}], "11": [{"dia": "Terça", "n": 6, "run": 2, "walk": 3}, {"dia": "Quarta", "n": 6, "run": 3, "walk": 2}, {"dia": "Sábado", "n": 6, "run": 4, "walk": 1}], "12": [{"dia": "Terça", "n": 5, "run": 2, "walk": 3}, {"dia": "Quarta", "n": 6, "run": 3, "walk": 2}, {"dia": "Domingo", "prova": true}]}, "ev": {"0": [["06:45", "07:00", "Café", "ref"], ["10:00", "10:15", "Lanche", "ref"], ["11:30", "12:00", "Almoço", "ref"], ["15:30", "15:45", "Lanche", "ref"], ["18:30", "18:45", "Pré-JJ", "pre"], ["19:30", "21:00", "JIU-JITSU", "jj"], ["21:15", "21:45", "Jantar", "ref"], ["22:45", "23:00", "Dormir", "sono"]], "1": [["06:15", "06:30", "½ banana", "pre"], ["06:30", "07:15", "CORRIDA", "cor"], ["07:30", "07:45", "Café", "ref"], ["10:00", "10:15", "Lanche", "ref"], ["11:30", "12:00", "Almoço", "ref"], ["16:45", "17:00", "Pré-treino", "pre"], ["18:00", "19:15", "MUSCULAÇÃO A", "mus"], ["19:45", "20:15", "Jantar", "ref"], ["22:15", "22:30", "Dormir", "sono"]], "2": [["06:15", "06:30", "½ banana", "pre"], ["06:30", "07:15", "CORRIDA", "cor"], ["07:15", "07:30", "Café", "ref"], ["10:00", "10:15", "Lanche", "ref"], ["11:30", "12:00", "Almoço", "ref"], ["15:30", "15:45", "Lanche", "ref"], ["18:30", "18:45", "Pré-JJ", "pre"], ["19:30", "21:00", "JIU-JITSU (sem. 5+)", "jj5"], ["21:15", "21:45", "Jantar", "ref"], ["22:45", "23:00", "Dormir", "sono"]], "3": [["06:30", "06:45", "Café", "ref"], ["10:00", "10:15", "Lanche", "ref"], ["11:30", "12:00", "Almoço", "ref"], ["17:15", "17:30", "Pré-treino", "pre"], ["18:00", "19:15", "MUSCULAÇÃO B", "mus"], ["19:45", "20:15", "Jantar", "ref"], ["22:15", "22:30", "Dormir", "sono"]], "4": [["06:45", "07:00", "Café", "ref"], ["10:00", "10:15", "Lanche", "ref"], ["11:30", "12:00", "Almoço", "ref"], ["17:00", "17:15", "Pré-treino", "pre"], ["17:45", "19:00", "MUSCULAÇÃO C", "mus"], ["19:30", "20:00", "Jantar", "ref"], ["22:30", "22:45", "Dormir", "sono"]], "5": [["07:30", "07:45", "Pão c/ mel", "pre"], ["07:45", "08:30", "CORRIDA", "cor"], ["08:45", "09:00", "Café", "ref"], ["10:30", "10:45", "Lanche", "ref"], ["12:30", "13:00", "Almoço", "ref"], ["16:00", "16:15", "Lanche", "ref"], ["19:30", "20:00", "Jantar", "ref"]], "6": [["08:30", "08:45", "Café", "ref"], ["12:30", "13:00", "Almoço", "ref"], ["16:00", "16:15", "Lanche", "ref"], ["19:30", "20:00", "Jantar", "ref"], ["22:15", "22:30", "Dormir", "sono"]]}, "saude": [["Agendar consulta (clínico geral ou médico do esporte)", "Liberação para treinar; agendar numa manhã de teletrabalho (terça é a mais livre)"], ["Pressão arterial", "Básico antes de aumentar intensidade"], ["Eletrocardiograma (ECG)", "Recomendado para quem tem 40+ e vai iniciar exercício"], ["Teste ergométrico", "Avalia o coração no esforço; útil antes de corrida e jiu-jitsu"], ["Hemograma completo", "Anemia, infecções"], ["Glicemia de jejum + hemoglobina glicada", "Controle de açúcar no sangue"], ["Colesterol total e frações + triglicerídeos", "Risco cardiovascular"], ["TSH / T4 livre", "Tireoide (energia, peso)"], ["Creatinina, ureia, TGO/TGP", "Rins e fígado (importante se for usar whey)"], ["Ácido úrico, vitamina D, B12, ferritina", "Comuns após período sedentário/indoor"], ["Perguntar ao médico sobre PSA e rastreios para a idade", "Decisão individual com o médico"], ["Dentista (revisão anual)", "Fecha o pacote de saúde"]]};
+const V = {
+"gym": {
+"1": {
+"A": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=X6VqXSqm6OA"
+],
+[
+"https://www.youtube.com/watch?v=Fdb6lfKW8EU"
+],
+[
+"https://www.youtube.com/watch?v=WHJ-8Jr8Ug4"
+],
+[
+"https://www.youtube.com/watch?v=OXgLJbVtIYk"
+]
+],
+"B": [
+[
+"https://www.youtube.com/watch?v=sBJK1MU1JGg",
+"https://www.youtube.com/watch?v=oM4dQnw2r44"
+],
+[
+"https://www.youtube.com/watch?v=I_s_nJzuIt0"
+],
+[
+"https://www.youtube.com/watch?v=XrwFXYahprI"
+],
+[
+"https://www.youtube.com/watch?v=0puAmlxM_i8"
+],
+[
+"https://www.youtube.com/watch?v=rRts63f3lpg"
+],
+[
+"https://www.youtube.com/watch?v=Rg25JFpGLGg",
+"https://www.youtube.com/watch?v=SsNlVHY15Xs"
+]
+],
+"C": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=LtlC2kvF8_g"
+],
+[
+"https://www.youtube.com/watch?v=rgF7Pxhl1t0"
+],
+[
+"https://www.youtube.com/watch?v=8T0lJXVFsVg"
+],
+[
+"https://www.youtube.com/watch?v=64MVKBH1QS8"
+]
+]
+},
+"2": {
+"A": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=X6VqXSqm6OA"
+],
+[
+"https://www.youtube.com/watch?v=Fdb6lfKW8EU"
+],
+[
+"https://www.youtube.com/watch?v=WHJ-8Jr8Ug4"
+],
+[
+"https://www.youtube.com/watch?v=OXgLJbVtIYk"
+]
+],
+"B": [
+[
+"https://www.youtube.com/watch?v=sBJK1MU1JGg",
+"https://www.youtube.com/watch?v=oM4dQnw2r44"
+],
+[
+"https://www.youtube.com/watch?v=I_s_nJzuIt0"
+],
+[
+"https://www.youtube.com/watch?v=XrwFXYahprI"
+],
+[
+"https://www.youtube.com/watch?v=0puAmlxM_i8"
+],
+[
+"https://www.youtube.com/watch?v=rRts63f3lpg"
+],
+[
+"https://www.youtube.com/watch?v=Rg25JFpGLGg",
+"https://www.youtube.com/watch?v=SsNlVHY15Xs"
+]
+],
+"C": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=LtlC2kvF8_g"
+],
+[
+"https://www.youtube.com/watch?v=rgF7Pxhl1t0"
+],
+[
+"https://www.youtube.com/watch?v=8T0lJXVFsVg"
+],
+[
+"https://www.youtube.com/watch?v=64MVKBH1QS8"
+]
+]
+},
+"3": {
+"A": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=X6VqXSqm6OA"
+],
+[
+"https://www.youtube.com/watch?v=Fdb6lfKW8EU"
+],
+[
+"https://www.youtube.com/watch?v=WHJ-8Jr8Ug4"
+],
+[
+"https://www.youtube.com/watch?v=OXgLJbVtIYk"
+]
+],
+"B": [
+[
+"https://www.youtube.com/watch?v=sBJK1MU1JGg",
+"https://www.youtube.com/watch?v=oM4dQnw2r44"
+],
+[
+"https://www.youtube.com/watch?v=I_s_nJzuIt0"
+],
+[
+"https://www.youtube.com/watch?v=XrwFXYahprI"
+],
+[
+"https://www.youtube.com/watch?v=0puAmlxM_i8"
+],
+[
+"https://www.youtube.com/watch?v=rRts63f3lpg"
+],
+[
+"https://www.youtube.com/watch?v=Rg25JFpGLGg",
+"https://www.youtube.com/watch?v=SsNlVHY15Xs"
+]
+],
+"C": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=LtlC2kvF8_g"
+],
+[
+"https://www.youtube.com/watch?v=rgF7Pxhl1t0"
+],
+[
+"https://www.youtube.com/watch?v=8T0lJXVFsVg"
+],
+[
+"https://www.youtube.com/watch?v=64MVKBH1QS8"
+]
+]
+},
+"4": {
+"A": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=X6VqXSqm6OA"
+],
+[
+"https://www.youtube.com/watch?v=Fdb6lfKW8EU"
+],
+[
+"https://www.youtube.com/watch?v=WHJ-8Jr8Ug4"
+],
+[
+"https://www.youtube.com/watch?v=OXgLJbVtIYk"
+]
+],
+"B": [
+[
+"https://www.youtube.com/watch?v=sBJK1MU1JGg",
+"https://www.youtube.com/watch?v=oM4dQnw2r44"
+],
+[
+"https://www.youtube.com/watch?v=I_s_nJzuIt0"
+],
+[
+"https://www.youtube.com/watch?v=XrwFXYahprI"
+],
+[
+"https://www.youtube.com/watch?v=0puAmlxM_i8"
+],
+[
+"https://www.youtube.com/watch?v=rRts63f3lpg"
+],
+[
+"https://www.youtube.com/watch?v=Rg25JFpGLGg",
+"https://www.youtube.com/watch?v=SsNlVHY15Xs"
+]
+],
+"C": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=LtlC2kvF8_g"
+],
+[
+"https://www.youtube.com/watch?v=rgF7Pxhl1t0"
+],
+[
+"https://www.youtube.com/watch?v=8T0lJXVFsVg"
+],
+[
+"https://www.youtube.com/watch?v=64MVKBH1QS8"
+]
+]
+},
+"5": {
+"A": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=Fdb6lfKW8EU"
+],
+[
+"https://www.youtube.com/watch?v=XwT-yKjAcvI"
+],
+[
+"https://www.youtube.com/watch?v=WHJ-8Jr8Ug4"
+],
+[
+"https://www.youtube.com/watch?v=OXgLJbVtIYk"
+]
+],
+"B": [
+[
+"https://www.youtube.com/watch?v=sBJK1MU1JGg",
+"https://www.youtube.com/watch?v=oM4dQnw2r44"
+],
+[
+"https://www.youtube.com/watch?v=rRts63f3lpg"
+],
+[
+"https://www.youtube.com/watch?v=8aVapC7mMNA"
+],
+[
+"https://www.youtube.com/watch?v=XrwFXYahprI"
+],
+[
+"https://www.youtube.com/watch?v=0puAmlxM_i8"
+],
+[
+"https://www.youtube.com/watch?v=Rg25JFpGLGg",
+"https://www.youtube.com/watch?v=SsNlVHY15Xs"
+]
+],
+"C": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=8T0lJXVFsVg"
+],
+[
+"https://www.youtube.com/watch?v=UNTmHu6zctU"
+],
+[
+"https://www.youtube.com/watch?v=rgF7Pxhl1t0"
+],
+[
+"https://www.youtube.com/watch?v=JjipHldPIPk"
+]
+]
+},
+"6": {
+"A": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=Fdb6lfKW8EU"
+],
+[
+"https://www.youtube.com/watch?v=XwT-yKjAcvI"
+],
+[
+"https://www.youtube.com/watch?v=WHJ-8Jr8Ug4"
+],
+[
+"https://www.youtube.com/watch?v=OXgLJbVtIYk"
+]
+],
+"B": [
+[
+"https://www.youtube.com/watch?v=sBJK1MU1JGg",
+"https://www.youtube.com/watch?v=oM4dQnw2r44"
+],
+[
+"https://www.youtube.com/watch?v=rRts63f3lpg"
+],
+[
+"https://www.youtube.com/watch?v=8aVapC7mMNA"
+],
+[
+"https://www.youtube.com/watch?v=XrwFXYahprI"
+],
+[
+"https://www.youtube.com/watch?v=0puAmlxM_i8"
+],
+[
+"https://www.youtube.com/watch?v=Rg25JFpGLGg",
+"https://www.youtube.com/watch?v=SsNlVHY15Xs"
+]
+],
+"C": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=8T0lJXVFsVg"
+],
+[
+"https://www.youtube.com/watch?v=UNTmHu6zctU"
+],
+[
+"https://www.youtube.com/watch?v=rgF7Pxhl1t0"
+],
+[
+"https://www.youtube.com/watch?v=JjipHldPIPk"
+]
+]
+},
+"7": {
+"A": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=Fdb6lfKW8EU"
+],
+[
+"https://www.youtube.com/watch?v=XwT-yKjAcvI"
+],
+[
+"https://www.youtube.com/watch?v=WHJ-8Jr8Ug4"
+],
+[
+"https://www.youtube.com/watch?v=OXgLJbVtIYk"
+]
+],
+"B": [
+[
+"https://www.youtube.com/watch?v=sBJK1MU1JGg",
+"https://www.youtube.com/watch?v=oM4dQnw2r44"
+],
+[
+"https://www.youtube.com/watch?v=rRts63f3lpg"
+],
+[
+"https://www.youtube.com/watch?v=8aVapC7mMNA"
+],
+[
+"https://www.youtube.com/watch?v=XrwFXYahprI"
+],
+[
+"https://www.youtube.com/watch?v=0puAmlxM_i8"
+],
+[
+"https://www.youtube.com/watch?v=Rg25JFpGLGg",
+"https://www.youtube.com/watch?v=SsNlVHY15Xs"
+]
+],
+"C": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=8T0lJXVFsVg"
+],
+[
+"https://www.youtube.com/watch?v=UNTmHu6zctU"
+],
+[
+"https://www.youtube.com/watch?v=rgF7Pxhl1t0"
+],
+[
+"https://www.youtube.com/watch?v=JjipHldPIPk"
+]
+]
+},
+"8": {
+"A": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=Fdb6lfKW8EU"
+],
+[
+"https://www.youtube.com/watch?v=XwT-yKjAcvI"
+],
+[
+"https://www.youtube.com/watch?v=WHJ-8Jr8Ug4"
+],
+[
+"https://www.youtube.com/watch?v=OXgLJbVtIYk"
+]
+],
+"B": [
+[
+"https://www.youtube.com/watch?v=sBJK1MU1JGg",
+"https://www.youtube.com/watch?v=oM4dQnw2r44"
+],
+[
+"https://www.youtube.com/watch?v=rRts63f3lpg"
+],
+[
+"https://www.youtube.com/watch?v=8aVapC7mMNA"
+],
+[
+"https://www.youtube.com/watch?v=XrwFXYahprI"
+],
+[
+"https://www.youtube.com/watch?v=0puAmlxM_i8"
+],
+[
+"https://www.youtube.com/watch?v=Rg25JFpGLGg",
+"https://www.youtube.com/watch?v=SsNlVHY15Xs"
+]
+],
+"C": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=8T0lJXVFsVg"
+],
+[
+"https://www.youtube.com/watch?v=UNTmHu6zctU"
+],
+[
+"https://www.youtube.com/watch?v=rgF7Pxhl1t0"
+],
+[
+"https://www.youtube.com/watch?v=JjipHldPIPk"
+]
+]
+},
+"9": {
+"A": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=bZIcanhrevs"
+],
+[
+"https://www.youtube.com/watch?v=Fdb6lfKW8EU"
+],
+[
+"https://www.youtube.com/watch?v=XwT-yKjAcvI"
+],
+[
+"https://www.youtube.com/watch?v=OXgLJbVtIYk"
+]
+],
+"B": [
+[
+"https://www.youtube.com/watch?v=sBJK1MU1JGg",
+"https://www.youtube.com/watch?v=oM4dQnw2r44"
+],
+[
+"https://www.youtube.com/watch?v=rRts63f3lpg"
+],
+[
+"https://www.youtube.com/watch?v=jF5UJ_lNJ-A"
+],
+[
+"https://www.youtube.com/watch?v=XrwFXYahprI",
+"https://www.youtube.com/watch?v=NXiskp5I3rc"
+],
+[
+"https://www.youtube.com/watch?v=0puAmlxM_i8"
+],
+[
+"https://www.youtube.com/watch?v=Rg25JFpGLGg",
+"https://www.youtube.com/watch?v=SsNlVHY15Xs"
+]
+],
+"C": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=dDsJBTTPP9g"
+],
+[
+"https://www.youtube.com/watch?v=4Z0lQkTMTCg"
+],
+[
+"https://www.youtube.com/watch?v=rgF7Pxhl1t0"
+],
+[
+"https://www.youtube.com/watch?v=N5ogmKdk38o"
+],
+[
+"https://www.youtube.com/watch?v=64MVKBH1QS8"
+]
+]
+},
+"10": {
+"A": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=bZIcanhrevs"
+],
+[
+"https://www.youtube.com/watch?v=Fdb6lfKW8EU"
+],
+[
+"https://www.youtube.com/watch?v=XwT-yKjAcvI"
+],
+[
+"https://www.youtube.com/watch?v=OXgLJbVtIYk"
+]
+],
+"B": [
+[
+"https://www.youtube.com/watch?v=sBJK1MU1JGg",
+"https://www.youtube.com/watch?v=oM4dQnw2r44"
+],
+[
+"https://www.youtube.com/watch?v=rRts63f3lpg"
+],
+[
+"https://www.youtube.com/watch?v=jF5UJ_lNJ-A"
+],
+[
+"https://www.youtube.com/watch?v=XrwFXYahprI",
+"https://www.youtube.com/watch?v=NXiskp5I3rc"
+],
+[
+"https://www.youtube.com/watch?v=0puAmlxM_i8"
+],
+[
+"https://www.youtube.com/watch?v=Rg25JFpGLGg",
+"https://www.youtube.com/watch?v=SsNlVHY15Xs"
+]
+],
+"C": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=dDsJBTTPP9g"
+],
+[
+"https://www.youtube.com/watch?v=4Z0lQkTMTCg"
+],
+[
+"https://www.youtube.com/watch?v=rgF7Pxhl1t0"
+],
+[
+"https://www.youtube.com/watch?v=N5ogmKdk38o"
+],
+[
+"https://www.youtube.com/watch?v=64MVKBH1QS8"
+]
+]
+},
+"11": {
+"A": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=bZIcanhrevs"
+],
+[
+"https://www.youtube.com/watch?v=Fdb6lfKW8EU"
+],
+[
+"https://www.youtube.com/watch?v=XwT-yKjAcvI"
+],
+[
+"https://www.youtube.com/watch?v=OXgLJbVtIYk"
+]
+],
+"B": [
+[
+"https://www.youtube.com/watch?v=sBJK1MU1JGg",
+"https://www.youtube.com/watch?v=oM4dQnw2r44"
+],
+[
+"https://www.youtube.com/watch?v=rRts63f3lpg"
+],
+[
+"https://www.youtube.com/watch?v=jF5UJ_lNJ-A"
+],
+[
+"https://www.youtube.com/watch?v=XrwFXYahprI",
+"https://www.youtube.com/watch?v=NXiskp5I3rc"
+],
+[
+"https://www.youtube.com/watch?v=0puAmlxM_i8"
+],
+[
+"https://www.youtube.com/watch?v=Rg25JFpGLGg",
+"https://www.youtube.com/watch?v=SsNlVHY15Xs"
+]
+],
+"C": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=dDsJBTTPP9g"
+],
+[
+"https://www.youtube.com/watch?v=4Z0lQkTMTCg"
+],
+[
+"https://www.youtube.com/watch?v=rgF7Pxhl1t0"
+],
+[
+"https://www.youtube.com/watch?v=N5ogmKdk38o"
+],
+[
+"https://www.youtube.com/watch?v=64MVKBH1QS8"
+]
+]
+},
+"12": {
+"A": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=bZIcanhrevs"
+],
+[
+"https://www.youtube.com/watch?v=Fdb6lfKW8EU"
+],
+[
+"https://www.youtube.com/watch?v=XwT-yKjAcvI"
+],
+[
+"https://www.youtube.com/watch?v=OXgLJbVtIYk"
+]
+],
+"B": [
+[
+"https://www.youtube.com/watch?v=sBJK1MU1JGg",
+"https://www.youtube.com/watch?v=oM4dQnw2r44"
+],
+[
+"https://www.youtube.com/watch?v=rRts63f3lpg"
+],
+[
+"https://www.youtube.com/watch?v=jF5UJ_lNJ-A"
+],
+[
+"https://www.youtube.com/watch?v=XrwFXYahprI",
+"https://www.youtube.com/watch?v=NXiskp5I3rc"
+],
+[
+"https://www.youtube.com/watch?v=0puAmlxM_i8"
+],
+[
+"https://www.youtube.com/watch?v=Rg25JFpGLGg",
+"https://www.youtube.com/watch?v=SsNlVHY15Xs"
+]
+],
+"C": [
+[
+"https://www.youtube.com/watch?v=M8goKw7_-tU"
+],
+[
+"https://www.youtube.com/watch?v=dDsJBTTPP9g"
+],
+[
+"https://www.youtube.com/watch?v=4Z0lQkTMTCg"
+],
+[
+"https://www.youtube.com/watch?v=rgF7Pxhl1t0"
+],
+[
+"https://www.youtube.com/watch?v=N5ogmKdk38o"
+],
+[
+"https://www.youtube.com/watch?v=64MVKBH1QS8"
+]
+]
+}
+},
+"run": {
+"1": [
+[
+"https://www.youtube.com/watch?v=n3oSXWHxRZc"
+],
+[
+"https://www.youtube.com/watch?v=l458UMWaUZY"
+],
+[
+"https://www.youtube.com/watch?v=PMMe4m4A7jI"
+],
+[
+"https://www.youtube.com/watch?v=XXKGgbXsSYk"
+]
+],
+"2": [
+[
+"https://www.youtube.com/watch?v=n3oSXWHxRZc"
+],
+[
+"https://www.youtube.com/watch?v=l458UMWaUZY"
+],
+[
+"https://www.youtube.com/watch?v=PMMe4m4A7jI"
+],
+[
+"https://www.youtube.com/watch?v=XXKGgbXsSYk"
+]
+],
+"3": [
+[
+"https://www.youtube.com/watch?v=n3oSXWHxRZc"
+],
+[
+"https://www.youtube.com/watch?v=l458UMWaUZY"
+],
+[
+"https://www.youtube.com/watch?v=PMMe4m4A7jI"
+],
+[
+"https://www.youtube.com/watch?v=XXKGgbXsSYk"
+]
+],
+"4": [
+[
+"https://www.youtube.com/watch?v=n3oSXWHxRZc"
+],
+[
+"https://www.youtube.com/watch?v=l458UMWaUZY",
+"https://www.youtube.com/watch?v=gSyqvjw__Hk"
+],
+[
+"https://www.youtube.com/watch?v=PMMe4m4A7jI"
+],
+[
+"https://www.youtube.com/watch?v=XXKGgbXsSYk"
+]
+],
+"5": [
+[
+"https://www.youtube.com/watch?v=n3oSXWHxRZc"
+],
+[
+"https://www.youtube.com/watch?v=o8huEc-Vjeo"
+],
+[
+"https://www.youtube.com/watch?v=fWolIbNOfdA"
+],
+[
+"https://www.youtube.com/watch?v=c_Xq6ktvHhg"
+]
+],
+"6": [
+[
+"https://www.youtube.com/watch?v=n3oSXWHxRZc"
+],
+[
+"https://www.youtube.com/watch?v=o8huEc-Vjeo"
+],
+[
+"https://www.youtube.com/watch?v=fWolIbNOfdA"
+],
+[
+"https://www.youtube.com/watch?v=c_Xq6ktvHhg"
+]
+],
+"7": [
+[
+"https://www.youtube.com/watch?v=n3oSXWHxRZc"
+],
+[
+"https://www.youtube.com/watch?v=o8huEc-Vjeo"
+],
+[
+"https://www.youtube.com/watch?v=fWolIbNOfdA"
+],
+[
+"https://www.youtube.com/watch?v=c_Xq6ktvHhg"
+]
+],
+"8": [
+[
+"https://www.youtube.com/watch?v=n3oSXWHxRZc"
+],
+[
+"https://www.youtube.com/watch?v=o8huEc-Vjeo"
+],
+[
+"https://www.youtube.com/watch?v=fWolIbNOfdA"
+],
+[
+"https://www.youtube.com/watch?v=c_Xq6ktvHhg"
+]
+],
+"9": [
+[
+"https://www.youtube.com/watch?v=n3oSXWHxRZc"
+],
+[
+"https://www.youtube.com/watch?v=avQPsjftleg"
+],
+[
+"https://www.youtube.com/watch?v=PbrwxoseaQE"
+],
+[
+"https://www.youtube.com/watch?v=mPTuAPAgw3k"
+]
+],
+"10": [
+[
+"https://www.youtube.com/watch?v=n3oSXWHxRZc"
+],
+[
+"https://www.youtube.com/watch?v=avQPsjftleg"
+],
+[
+"https://www.youtube.com/watch?v=PbrwxoseaQE"
+],
+[
+"https://www.youtube.com/watch?v=mPTuAPAgw3k"
+]
+],
+"11": [
+[
+"https://www.youtube.com/watch?v=n3oSXWHxRZc"
+],
+[
+"https://www.youtube.com/watch?v=avQPsjftleg"
+],
+[
+"https://www.youtube.com/watch?v=PbrwxoseaQE"
+],
+[
+"https://www.youtube.com/watch?v=mPTuAPAgw3k"
+]
+],
+"12": [
+[
+"https://www.youtube.com/watch?v=n3oSXWHxRZc"
+],
+[
+"https://www.youtube.com/watch?v=avQPsjftleg"
+],
+[
+"https://www.youtube.com/watch?v=PbrwxoseaQE"
+],
+[
+"https://www.youtube.com/watch?v=DzKRjcp-aHo"
+]
+]
+}
+};
+const START = new Date(2026, 9, 5);
+const DAYS = ["Segunda","Terça","Quarta","Quinta","Sexta","Sábado","Domingo"];
+const $ = s => document.querySelector(s);
+const el = (t, a = {}, h = "") => { const e = document.createElement(t); for (const k in a) { if (k === "class") e.className = a[k]; else if (k === "style") e.style.cssText = a[k]; else e.setAttribute(k, a[k]); } if (h !== undefined) e.innerHTML = h; return e; };
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* storage */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem("ret:" + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem("ret:" + k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* theme */
+(function(){
+  const t = store.get("theme", null); if (t) document.documentElement.setAttribute("data-theme", t);
+  $("#themeBtn").onclick = () => {
+    const cur = document.documentElement.getAttribute("data-theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    const nx = cur === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", nx); store.set("theme", nx);
+  };
+})();
+
+/* dates */
+const now = new Date(); now.setHours(0,0,0,0);
+const diff = Math.floor((now - START) / 86400000);
+const curWeek = Math.min(12, Math.max(1, Math.floor(diff / 7) + 1));
+const todayIdx = (now.getDay() + 6) % 7;
+const etapaOf = w => w <= 4 ? "Base" : (w <= 8 ? "Consolidação" : "Alvo");
+const fmtDate = now.toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" });
+$("#heroDate").textContent = fmtDate.charAt(0).toUpperCase() + fmtDate.slice(1);
+if (diff < 0) {
+  $("#heroTitle").textContent = "Começa segunda";
+  $("#heroSub").textContent = "O plano de 12 semanas começa em 5 de outubro.";
+} else if (diff >= 84) {
+  $("#heroTitle").textContent = "12 semanas concluídas";
+  $("#heroSub").textContent = "Prova de 3 km feita. Hora de planejar o próximo ciclo.";
+} else {
+  $("#heroTitle").textContent = `Semana ${curWeek} de 12`;
+  $("#heroSub").textContent = `Etapa ${etapaOf(curWeek)}. ${D.gymFoco[curWeek]}.`;
+}
+const tr = $("#track");
+for (let w = 1; w <= 12; w++) tr.append(el("span", { class: w < curWeek && diff >= 0 ? "past" : (w === curWeek && diff >= 0 && diff < 84 ? "now" : "") }, w));
+
+/* tabs */
+const TABS = [["hoje","Hoje"],["horarios","Horários"],["corrida","Corrida"],["musculacao","Musculação"],["receitas","Receitas"],["compras","Compras"],["saude","Saúde"]];
+const tabs = $("#tabs");
+TABS.forEach(([id, name]) => {
+  const b = el("button", { role: "tab", "aria-selected": "false", "aria-controls": "s-" + id, type: "button" }, name);
+  b.onclick = () => showTab(id); tabs.append(b);
+});
+function showTab(id) {
+  TABS.forEach(([t]) => { $("#s-" + t).hidden = t !== id; });
+  [...tabs.children].forEach((b, i) => b.setAttribute("aria-selected", TABS[i][0] === id));
+  store.set("tab", id);
+  const nv = document.querySelector("nav"); if (window.scrollY > nv.offsetTop) window.scrollTo(0, nv.offsetTop);
+}
+
+/* ===== Hoje ===== */
+let selDay = todayIdx;
+const dayChips = $("#dayChips");
+DAYS.forEach((d, i) => {
+  const b = el("button", { class: "chip" + (i === todayIdx ? " today" : ""), "aria-pressed": String(i === selDay), type: "button" }, d);
+  b.onclick = () => { selDay = i; [...dayChips.children].forEach((c, j) => c.setAttribute("aria-pressed", j === i)); renderDay(); };
+  dayChips.append(b);
+});
+const WHAT = { ref: "Refeição", pre: "Lanche / pré-treino", treino: "Treino", jj: "Jiu-jitsu", esp: "Oração e meditação", pres: "Trabalho presencial", tele: "Teletrabalho", desc: "Livre / descanso", filho: "Futebol do filho", "": "" };
+function renderDay() {
+  const ag = $("#agenda"); ag.innerHTML = "";
+  D.rows.forEach(([label, cells]) => {
+    const [txt, cat] = cells[selDay];
+    if (!txt || txt === "—") return;
+    const m = txt.match(/^(\d{2}:\d{2})(?:–\d{2}:\d{2})?\s*·\s*(.*)$/);
+    const t = m ? m[1] : (/^\d{2}:\d{2}$/.test(txt) ? txt : "");
+    const body = m ? m[2] : (/^\d{2}:\d{2}$/.test(txt) ? "Dormir" : txt);
+    const range = (txt.match(/^(\d{2}:\d{2}–\d{2}:\d{2})/) || [])[1];
+    const li = el("li", { class: "cat-" + (cat || "desc") + (cat === "treino" || cat === "jj" ? " big" : "") });
+    li.innerHTML = `<span class="t">${esc(t)}</span><div class="what">${esc(label)}${range ? " · " + esc(range) : ""}</div><p class="txt">${esc(body)}</p>`;
+    ag.append(li);
+  });
+  // destaque do treino
+  const f = $("#dayFocus"); f.innerHTML = "";
+  const runToday = (D.run[curWeek] || []).find(s => s.dia === DAYS[selDay] || (s.prova && selDay === 6));
+  const gymMap = { 1: "A", 3: "B", 4: "C" };
+  if (runToday) {
+    const box = el("div", { class: "today-box", style: "--c:var(--run)" });
+    box.innerHTML = `<h3>Corrida da semana ${curWeek}</h3>` + (runToday.prova ? `<p>Prova: 3 km correndo sem parar, ritmo confortável.</p>` :
+      `<p>${runToday.n}× corre ${ft(runToday.run)} + caminha ${ft(runToday.walk)}. Total ${Math.round(10 + runToday.n * (runToday.run + runToday.walk))} min.</p>`);
+    if (!runToday.prova) box.append(bar(runToday));
+    f.append(box);
+  } else if (gymMap[selDay]) {
+    const t = gymMap[selDay];
+    const box = el("div", { class: "today-box", style: "--c:var(--mat)" });
+    const n = D.gym[curWeek][t].reduce((a, b) => a + (b[0] === "Aquecimento" ? 0 : b[1].length), 0);
+    box.innerHTML = `<h3>Musculação: treino ${t}</h3><p>${n} exercícios na semana ${curWeek}. Veja a aba Musculação.</p>`;
+    f.append(box);
+  }
+  if (selDay === 0 || (selDay === 2 && curWeek >= 5)) {
+    const box = el("div", { class: "today-box", style: "--c:var(--jj)" });
+    box.innerHTML = `<h3>Jiu-jitsu às 19:30</h3><p>Pré-treino leve às 18:30 e jantar leve depois.</p>`;
+    f.append(box);
+  }
+}
+
+/* ===== Horários ===== */
+(function(){
+  const order = ["Pré-corrida","Treino da manhã","Café da manhã","Lanche da manhã","Almoço","Lanche da tarde","Pré-treino","Treino da noite","Jantar","Dormir"];
+  const T = {"Pré-corrida": [null, ["06:15 · ½ banana", "pre"], ["06:15 · ½ banana", "pre"], null, null, ["07:30 · pão com mel", "pre"], null], "Treino da manhã": [null, ["06:30–07:15 · Corrida", "cor"], ["06:30–07:15 · Corrida", "cor"], null, null, ["07:45–08:30 · Corrida", "cor"], null], "Café da manhã": [["06:45", "ref"], ["07:30", "ref"], ["07:20", "ref"], ["06:30", "ref"], ["06:45", "ref"], ["08:45", "ref"], ["08:30", "ref"]], "Lanche da manhã": [["10:00", "ref"], ["10:00", "ref"], ["10:00", "ref"], ["10:00", "ref"], ["10:00", "ref"], ["10:30", "ref"], null], "Almoço": [["11:30", "ref"], ["11:30", "ref"], ["11:30", "ref"], ["11:30", "ref"], ["11:30", "ref"], ["12:30", "ref"], ["12:30", "ref"]], "Lanche da tarde": [["15:30", "ref"], null, ["15:30", "ref"], null, null, ["16:00", "ref"], ["16:00", "ref"]], "Pré-treino": [["18:30", "pre"], ["16:45", "pre"], ["18:30 (sem. 5+)", "pre"], ["17:15", "pre"], ["17:00", "pre"], null, null], "Treino da noite": [["19:30–21:00 · Jiu-jitsu", "jj"], ["18:00–19:15 · Musculação A", "mus"], ["19:30–21:00 · Jiu-jitsu (sem. 5+)", "jj5"], ["18:00–19:15 · Musculação B", "mus"], ["17:45–19:00 · Musculação C", "mus"], null, null], "Jantar": [["21:15", "ref"], ["19:45", "ref"], ["21:15 (sem. 1–4: 19:30)", "ref"], ["19:45", "ref"], ["19:30", "ref"], ["19:30", "ref"], ["19:30", "ref"]], "Dormir": [["22:45", "sono"], ["22:15", "sono"], ["22:45", "sono"], ["22:15", "sono"], ["22:30", "sono"], ["23:00", "sono"], ["22:15", "sono"]]};
+  let h = "<thead><tr><th>Momento</th>" + DAYS.map(d => `<th>${d}</th>`).join("") + "</tr></thead><tbody>";
+  order.forEach(k => {
+    h += `<tr><td>${k}</td>` + T[k].map(v => v ? `<td><span class="p p-${v[1]}">${esc(v[0])}</span></td>` : `<td class="nil">—</td>`).join("") + "</tr>";
+  });
+  $("#hTable").innerHTML = h + "</tbody>";
+})();
+
+/* ===== Corrida ===== */
+function ft(m) { const s = Math.round(m * 60), mm = Math.floor(s / 60), ss = s % 60; return mm && ss ? `${mm}'${String(ss).padStart(2, "0")}"` : (mm ? `${mm} min` : `${ss} s`); }
+function bar(s) {
+  const b = el("div", { class: "bar", role: "img", "aria-label": `5 min aquecendo, ${s.n} vezes corre ${ft(s.run)} e caminha ${ft(s.walk)}, 5 min soltando` });
+  const tot = 10 + s.n * (s.run + s.walk);
+  const add = (cls, m) => b.append(el("i", { class: cls, style: `width:${(m / tot) * 100}%` }));
+  add("w5", 5); for (let i = 0; i < s.n; i++) { add("r", s.run); add("w", s.walk); } add("w5", 5);
+  return b;
+}
+const pickers = {};
+document.querySelectorAll(".week-pick").forEach(wp => {
+  const k = wp.dataset.for; pickers[k] = { w: curWeek, wp };
+  const [prev, next] = wp.querySelectorAll("button");
+  prev.onclick = () => { pickers[k].w = Math.max(1, pickers[k].w - 1); k === "run" ? renderRun() : renderGym(); };
+  next.onclick = () => { pickers[k].w = Math.min(12, pickers[k].w + 1); k === "run" ? renderRun() : renderGym(); };
+});
+const DAYCOL = { "Terça": "#2F5597", "Quarta": "#7030A0", "Sábado": "#C55A11", "Domingo": "#B3261E" };
+const doneBtn = (key) => {
+  const b = el("button", { class: "done", type: "button", "aria-pressed": String(!!store.get(key, false)) }, store.get(key, false) ? "Feito ✓" : "Marcar feito");
+  b.onclick = () => { const v = !store.get(key, false); store.set(key, v); b.setAttribute("aria-pressed", v); b.textContent = v ? "Feito ✓" : "Marcar feito"; };
+  return b;
+};
+function renderRun() {
+  const w = pickers.run.w; pickers.run.wp.querySelector(".lbl").textContent = `Semana ${w}`;
+  const runFoco = {"1": "Começo: tiros curtos de corrida, muita caminhada", "2": "+1 repetição em cada treino", "3": "+1 repetição: maior volume da etapa", "4": "Semana mais leve para o corpo assimilar", "5": "Tiros mais longos, menos repetições", "6": "+1 repetição", "7": "+1 repetição: maior volume da etapa", "8": "Semana mais leve", "9": "Tiros de 2 a 4 minutos", "10": "+1 repetição", "11": "Maior volume do programa", "12": "Semana da prova: 3 km contínuos no domingo"};
+  $("#runInfo").innerHTML = `<span class="etapa e-${etapaOf(w)}">${etapaOf(w)}</span><span class="foco">${esc(runFoco[w])}</span>`;
+  const L = $("#runList"); L.innerHTML = "";
+  D.run[w].forEach((s, i) => {
+    const row = el("div", { class: "session" });
+    row.append(el("span", { class: "day-tag", style: `--d:${DAYCOL[s.dia]}` }, s.dia));
+    const mid = el("div");
+    if (s.prova) mid.innerHTML = `<div class="main">Prova: 3 km sem parar</div><div class="meta">Ritmo confortável, em Z3. Aquece 5 min antes e solta 5 min depois.</div>`;
+    else mid.innerHTML = `<div class="main">${s.n}× corre ${ft(s.run)} + caminha ${ft(s.walk)}</div><div class="meta">${Math.round(10 + s.n * (s.run + s.walk))} min no total, ${+(s.n * s.run).toFixed(1)} min correndo</div>`;
+    const vids = V.run[w][1 + i] || [];
+    vids.forEach((u, j) => mid.append(Object.assign(el("a", { class: "vid", href: u, target: "_blank", rel: "noopener", style: "margin-top:8px;margin-right:6px" }, vids.length > 1 ? `Vídeo ${j + 1}` : "Vídeo do treino"))));
+    row.append(mid, doneBtn(`run:${w}:${i}`));
+    if (!s.prova) row.append(bar(s));
+    else { const b = el("div", { class: "bar" }); b.append(el("i", { class: "w5", style: "width:12%" }), el("i", { class: "r", style: "width:76%" }), el("i", { class: "w5", style: "width:12%" })); row.append(b); }
+    L.append(row);
+  });
+}
+
+/* ===== Musculação ===== */
+const GYM = { A: ["Treino A", "Peito, ombro e tríceps", "Terça", "#1F4E79"], B: ["Treino B", "Membros inferiores", "Quinta", "#3E7B2E"], C: ["Treino C", "Costas e bíceps", "Sexta", "#B4500F"] };
+const METC = { "Aquecimento": "#8A9AA6", "Bi-set": "#7A5AA6", "Meta de repetição": "#1F4E79", "Drop-set": "#B3261E", "Super-set": "#B58A00", "6 pesada / 12 leve": "#2A9DB5" };
+let gymSel = ({ 1: "A", 3: "B", 4: "C" })[todayIdx] || "A";
+const gt = $("#gymTabs");
+Object.entries(GYM).forEach(([k, v]) => {
+  const b = el("button", { type: "button", style: `--gc:${v[3]}`, "aria-pressed": String(k === gymSel) }, `${k} · ${v[2]}`);
+  b.onclick = () => { gymSel = k; [...gt.children].forEach(c => c.setAttribute("aria-pressed", c === b)); renderGym(); };
+  gt.append(b);
+});
+function renderGym() {
+  const w = pickers.gym.w; pickers.gym.wp.querySelector(".lbl").textContent = `Semana ${w}`;
+  $("#gymInfo").innerHTML = `<span class="etapa e-${etapaOf(w)}">${etapaOf(w)}</span><span class="foco">${esc(D.gymFoco[w])}</span>`;
+  const L = $("#gymList"); L.innerHTML = "";
+  const g = GYM[gymSel];
+  L.append(el("h3", { style: `color:${g[3]};margin-top:4px` }, `${g[0]}: ${g[1]}`));
+  D.gym[w][gymSel].forEach(([met, exs], bi) => {
+    const blk = el("div", { class: "block", style: `--bc:${METC[met] || "#888"}` });
+    blk.append(el("p", { class: "m" }, met));
+    exs.forEach(([n, s, r], ei) => {
+      const key = `gym:${w}:${gymSel}:${bi}:${ei}`;
+      const row = el("div", { class: "ex" });
+      const bl = (V.gym[w] && V.gym[w][gymSel] && V.gym[w][gymSel][bi]) || [];
+      const url = bl.length === exs.length ? bl[ei] : bl[0];
+      const va = url ? el("a", { class: "vid", href: url, target: "_blank", rel: "noopener", "aria-label": "Vídeo: " + n }, "<span>Vídeo</span>") : el("span");
+      row.append(el("span", { class: "n" }, esc(n)), el("span", { class: "sr" }, s === "—" ? "" : `${s}×${esc(r)}`), va);
+      if (met === "Aquecimento") { row.append(el("span"), el("span")); }
+      else {
+        const inp = el("input", { type: "number", inputmode: "decimal", step: "0.5", placeholder: "kg", "aria-label": "Carga em kg de " + n });
+        const v = store.get(key + ":kg", ""); if (v !== "") inp.value = v;
+        inp.oninput = () => store.set(key + ":kg", inp.value);
+        const t = el("button", { class: "tick", type: "button", "aria-label": "Feito: " + n, "aria-pressed": String(!!store.get(key, false)) }, "✓");
+        t.onclick = () => { const nv = !store.get(key, false); store.set(key, nv); t.setAttribute("aria-pressed", nv); };
+        row.append(inp, t);
+      }
+      blk.append(row);
+    });
+    L.append(blk);
+  });
+}
+
+/* ===== Receitas ===== */
+const RC = { "CAFÉ DA MANHÃ": "#B58A00", "PRÉ-TREINO": "#4C9638", "PÓS-TREINO / JANTAR": "#C55A11", "JANTAR LEVE": "#1F4E79", "LANCHES E SOBREMESAS": "#7A5AA6", "PREPARO DE DOMINGO (BASES E MARMITAS)": "#586A77" };
+const RNAME = { "CAFÉ DA MANHÃ": "Café da manhã", "PRÉ-TREINO": "Pré-treino", "PÓS-TREINO / JANTAR": "Pós-treino e jantar", "JANTAR LEVE": "Jantar leve", "LANCHES E SOBREMESAS": "Lanches e sobremesas", "PREPARO DE DOMINGO (BASES E MARMITAS)": "Preparo de domingo" };
+let recSel = "all";
+const rcChips = $("#recChips");
+[["all", "Todas"], ...Object.keys(D.recipes).map(k => [k, RNAME[k]])].forEach(([k, n]) => {
+  const b = el("button", { class: "chip", type: "button", "aria-pressed": String(k === recSel) }, n);
+  b.onclick = () => { recSel = k; [...rcChips.children].forEach(c => c.setAttribute("aria-pressed", c === b)); renderRec(); };
+  rcChips.append(b);
+});
+function renderRec() {
+  const L = $("#recList"); L.innerHTML = "";
+  Object.entries(D.recipes).forEach(([cat, items]) => {
+    if (recSel !== "all" && recSel !== cat) return;
+    const g = el("div", { class: "recipe-group", style: `--rc:${RC[cat]}` });
+    g.append(el("h3", {}, RNAME[cat]));
+    items.forEach(r => {
+      const d = el("details", { class: "recipe" });
+      const kc = r.kcal ? `${r.kcal}<small>kcal · P ${r.p} · C ${r.c} · G ${r.g}</small>` : `<small>${esc(r.tempo)}</small>`;
+      d.innerHTML = `<summary><span><span class="rn">${esc(r.nome)}</span><br><span class="rm">${esc(r.tempo)}, ${esc(r.eq)}${r.dia && r.dia !== "Opção extra" ? ". Na semana: " + esc(r.dia) : ""}</span></span><span class="kcal">${kc}</span></summary>
+        <div class="body"><div><h4>Ingredientes</h4><ul>${r.ing.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>
+        <div><h4>Como fazer</h4><ol>${r.passos.map(x => `<li>${esc(x)}</li>`).join("")}</ol></div></div>`;
+      g.append(d);
+    });
+    L.append(g);
+  });
+}
+
+/* ===== Compras ===== */
+const SECC = { "HORTIFRUTI": "#3E7B2E", "AÇOUGUE": "#B3261E", "OVOS E LATICÍNIOS": "#A07A00", "PADARIA E MERCEARIA": "#7A4317", "SUPLEMENTOS": "#1F4E79" };
+const SECN = { "HORTIFRUTI": "Hortifruti", "AÇOUGUE": "Açougue", "OVOS E LATICÍNIOS": "Ovos e laticínios", "PADARIA E MERCEARIA": "Padaria e mercearia", "SUPLEMENTOS": "Suplementos" };
+const GN = { "CAFÉ DA MANHÃ": "Café da manhã", "PRÉ-TREINO": "Pré-treino", "LANCHES": "Lanches", "ALMOÇO": "Almoço", "JANTAR": "Jantar" };
+let vezes = store.get("vezes", null) || D.dishes.map(d => d.v);
+if (vezes.length !== D.dishes.length) vezes = D.dishes.map(d => d.v);
+let mult = store.get("mult", 1);
+function stepper(val, onch) {
+  const s = el("div", { class: "step" });
+  const m = el("button", { type: "button", "aria-label": "Menos" }, "−"), sp = el("span", {}, val), p = el("button", { type: "button", "aria-label": "Mais" }, "+");
+  m.onclick = () => onch(-1, sp); p.onclick = () => onch(1, sp);
+  s.append(m, sp, p); return s;
+}
+function renderDishes() {
+  const L = $("#dishList"); L.innerHTML = ""; let g = null;
+  D.dishes.forEach((d, i) => {
+    if (d.g !== g) { g = d.g; L.append(el("div", { class: "dish-g" }, GN[g])); }
+    const row = el("div", { class: "dish" + (vezes[i] ? "" : " zero") });
+    row.append(el("div", {}, `<div class="dn">${esc(d.n)}</div><div class="dw">${d.onde === "extra" ? "opção extra" : esc(d.onde)}</div>`));
+    row.append(stepper(vezes[i], (dlt, sp) => { vezes[i] = Math.max(0, vezes[i] + dlt); sp.textContent = vezes[i]; row.classList.toggle("zero", !vezes[i]); store.set("vezes", vezes); renderShop(); }));
+    L.append(row);
+  });
+}
+function fmtQ(q, u) { if (u === "g" || u === "ml") return q >= 1000 ? (q / 1000).toLocaleString("pt-BR", { maximumFractionDigits: 2 }) + (u === "g" ? " kg" : " L") : Math.round(q) + " " + u; return (+q.toFixed(1)).toLocaleString("pt-BR") + " " + u; }
+function renderShop() {
+  const need = D.ings.map(() => 0);
+  D.dishes.forEach((d, i) => { for (const k in d.ing) need[+k] += d.ing[k] * vezes[i] * mult; });
+  const got = store.get("got", {});
+  const L = $("#shopList"); L.innerHTML = ""; let sec = null, n = 0, c = 0;
+  D.ings.forEach((ig, i) => {
+    if (need[i] <= 0) return;
+    if (ig.s !== sec) { sec = ig.s; L.append(el("div", { class: "sec-h", style: `background:${SECC[sec]}` }, SECN[sec])); }
+    n++; if (got[ig.n]) c++;
+    const packs = Math.ceil(need[i] / ig.pack - 1e-9);
+    const row = el("div", { class: "item" + (got[ig.n] ? " got" : "") });
+    const cb = el("button", { class: "cb", type: "button", "aria-label": "Comprado: " + ig.n, "aria-pressed": String(!!got[ig.n]) }, "✓");
+    cb.onclick = () => { const g2 = store.get("got", {}); g2[ig.n] = !g2[ig.n]; store.set("got", g2); renderShop(); };
+    row.append(cb, el("div", {}, `<div class="iname">${esc(ig.n)}</div><div class="iq">precisa ${fmtQ(need[i], ig.u)}</div>`),
+      el("div", { class: "buy" }, `${packs}<small>${esc(ig.plab)}</small>`));
+    L.append(row);
+  });
+  $("#shopCount").textContent = n ? `${c} de ${n} itens no carrinho` : "Nenhum prato selecionado.";
+  $("#mult").textContent = mult;
+}
+$("#multMinus").onclick = () => { mult = Math.max(1, mult - 1); store.set("mult", mult); renderShop(); };
+$("#multPlus").onclick = () => { mult = Math.min(4, mult + 1); store.set("mult", mult); renderShop(); };
+$("#shopReset").onclick = () => { store.set("got", {}); renderShop(); };
+
+/* ===== Saúde ===== */
+const P = store.get("perfil", { peso: 90, altura: 1.86, idade: 42 });
+["peso", "altura", "idade"].forEach(k => { const i = $("#" + k); i.value = P[k]; i.oninput = () => { P[k] = parseFloat(i.value) || 0; store.set("perfil", P); renderMetas(); }; });
+function zones() { const fc = Math.round(208 - 0.7 * P.idade); return { fc, z1: `${Math.round(fc * .5)}–${Math.round(fc * .59)}`, z3: `${Math.round(fc * .7)}–${Math.round(fc * .79)}` }; }
+function renderMetas() {
+  const z = zones(), imc = P.altura ? P.peso / (P.altura * P.altura) : 0;
+  $("#metas").innerHTML = [
+    [Math.round(P.peso * 1.6) + "–" + Math.round(P.peso * 2), "g de proteína por dia"],
+    [Math.max(3, P.peso * 0.035).toLocaleString("pt-BR", { maximumFractionDigits: 1 }) + " L", "de água por dia"],
+    [z.fc, "bpm, FC máxima estimada"],
+    [imc ? imc.toLocaleString("pt-BR", { maximumFractionDigits: 1 }) : "—", "IMC"]
+  ].map(([b, s]) => `<div><b>${b}</b><span>${s}</span></div>`).join("");
+  $("#z1").textContent = z.z1; $("#z3").textContent = z.z3;
+}
+function renderCheck() {
+  const st = store.get("check", {}); const L = $("#checkList"); L.innerHTML = ""; let f = 0;
+  D.saude.forEach(([item, why]) => {
+    const v = st[item] || "Pendente"; if (v === "Feito") f++;
+    const row = el("div", { class: "check" });
+    const sel = el("select", { "aria-label": "Status de " + item, class: "st-" + v });
+    ["Pendente", "Agendado", "Feito"].forEach(o => { const op = el("option", {}, o); if (o === v) op.selected = true; sel.append(op); });
+    sel.onchange = () => { const s2 = store.get("check", {}); s2[item] = sel.value; store.set("check", s2); renderCheck(); };
+    row.append(el("div", {}, `<div style="font-weight:600">${esc(item)}</div><div class="why">${esc(why)}</div>`), sel);
+    L.append(row);
+  });
+  $("#checkCount").textContent = `${f} de ${D.saude.length} concluídos`;
+}
+
+/* init */
+$("#vidAquec").href = V.run[1][0][0];
+renderDay(); renderRun(); renderGym(); renderRec(); renderDishes(); renderShop(); renderMetas(); renderCheck();
+showTab(store.get("tab", "hoje"));
+window.scrollTo(0, 0);
+</script>
+</body>
+</html>
