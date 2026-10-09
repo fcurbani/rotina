@@ -211,6 +211,24 @@ footer{color:var(--muted);font-size:13px;padding:26px 0 40px;border-top:1px soli
   .track span.now{animation:pulse 2.4s ease-in-out 1}
   @keyframes pulse{0%{transform:scaleY(.4)}60%{transform:scaleY(1.15)}100%{transform:scaleY(1)}}
 }
+
+/* Rest timer */
+#s-musculacao{padding-bottom:120px}
+.rest{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);
+  box-shadow:0 -4px 16px rgba(0,0,0,.08);padding:10px 0 calc(10px + env(safe-area-inset-bottom,0px))}
+.rest .wrap{display:flex;align-items:center;gap:10px}
+.rest .clock{font:800 40px/1 var(--display);min-width:92px;font-variant-numeric:tabular-nums}
+.rest .presets{display:flex;gap:6px;flex:1}
+.rest .presets button{flex:1;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:10px 0;font:700 17px/1 var(--display);cursor:pointer}
+.rest .presets button[aria-pressed="true"]{background:var(--mat);border-color:var(--mat);color:#fff}
+.rest .go{border:0;border-radius:50%;width:56px;height:56px;background:var(--walk);color:#fff;font:800 15px/1 var(--display);cursor:pointer;flex:0 0 auto}
+.rest.running .go{background:var(--jj)}
+.rest.running .clock{color:var(--mat)}
+.rest.done{background:var(--walk)}
+.rest.done .clock,.rest.done .go{color:#fff}
+.rest.done .presets button{background:rgba(255,255,255,.2);color:#fff;border-color:transparent}
+.rest .bar2{position:absolute;left:0;top:0;height:3px;background:var(--run);width:0}
+@media (max-width:380px){.rest .clock{font-size:32px;min-width:74px}.rest .go{width:50px;height:50px}}
 </style>
 </head>
 <body>
@@ -266,10 +284,23 @@ footer{color:var(--muted);font-size:13px;padding:26px 0 40px;border-top:1px soli
     <h2>Musculação</h2>
     <p class="lead">Terça treino A, quinta treino B, sexta treino C. Anote a carga e toque no círculo ao terminar o exercício. O botão vermelho abre o vídeo de execução.</p>
     <p class="met-help"><b>Bi-set</b>: dois exercícios seguidos, descanso só no fim do par. <b>Drop-set</b>: no fim da série, tira ~30% da carga e continua. <b>Super-set</b>: como o bi-set, com músculos diferentes. <b>6/12</b>: 6 reps pesadas emendadas em 12 leves.</p>
+    <p class="met-help"><b>Descanso</b>: ao terminar uma série (ou o par do bi-set), toque em <b>Iniciar</b> na barra de baixo. O celular vibra e apita quando acabar. Use 1:00 a 1:30 nos bi-sets e 1:30 a 2:00 nos exercícios pesados de perna.</p>
     <div class="week-pick" data-for="gym"><button type="button" aria-label="Semana anterior">‹</button><span class="lbl"></span><button type="button" aria-label="Próxima semana">›</button></div>
     <p id="gymInfo"></p>
     <div class="gym-tabs" id="gymTabs"></div>
     <div id="gymList"></div>
+    <div class="rest" id="rest" aria-live="polite">
+      <div class="bar2" id="restBar"></div>
+      <div class="wrap">
+        <div class="clock" id="restClock">1:30</div>
+        <div class="presets" id="restPresets">
+          <button type="button" data-s="60">1:00</button>
+          <button type="button" data-s="90">1:30</button>
+          <button type="button" data-s="120">2:00</button>
+        </div>
+        <button type="button" class="go" id="restGo" aria-label="Iniciar descanso">Iniciar</button>
+      </div>
+    </div>
   </section>
 
   <section id="s-receitas" role="tabpanel" hidden>
@@ -1512,6 +1543,44 @@ function renderCheck() {
   });
   $("#checkCount").textContent = `${f} de ${D.saude.length} concluídos`;
 }
+
+
+/* ===== Timer de descanso ===== */
+(function(){
+  const box=$("#rest"), clock=$("#restClock"), go=$("#restGo"), barEl=$("#restBar"), pres=$("#restPresets");
+  let dur=store.get("restDur",90), end=0, tick=null, ac=null, wake=null;
+  const fmt=t=>`${Math.floor(t/60)}:${String(t%60).padStart(2,"0")}`;
+  const mark=()=>[...pres.children].forEach(b=>b.setAttribute("aria-pressed",+b.dataset.s===dur));
+  function idle(){ clearInterval(tick); tick=null; end=0; box.classList.remove("running"); go.textContent="Iniciar"; go.setAttribute("aria-label","Iniciar descanso"); clock.textContent=fmt(dur); barEl.style.width="0"; releaseWake(); }
+  function beep(){
+    try{ if(!ac) return; [0,0.35,0.7].forEach(o=>{ const os=ac.createOscillator(), g=ac.createGain(); os.frequency.value=880; os.connect(g); g.connect(ac.destination);
+      g.gain.setValueAtTime(0.0001,ac.currentTime+o); g.gain.exponentialRampToValueAtTime(0.5,ac.currentTime+o+0.02); g.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+o+0.25);
+      os.start(ac.currentTime+o); os.stop(ac.currentTime+o+0.3); }); }catch(e){}
+  }
+  async function holdWake(){ try{ if("wakeLock" in navigator) wake=await navigator.wakeLock.request("screen"); }catch(e){} }
+  function releaseWake(){ try{ wake&&wake.release(); }catch(e){} wake=null; }
+  function finish(){
+    clearInterval(tick); tick=null; end=0; clock.textContent="Vai!"; barEl.style.width="100%";
+    box.classList.remove("running"); box.classList.add("done"); go.textContent="OK"; go.setAttribute("aria-label","Fechar aviso");
+    try{ navigator.vibrate&&navigator.vibrate([300,150,300,150,300]); }catch(e){}
+    beep(); releaseWake();
+  }
+  function update(){
+    const left=Math.max(0,Math.ceil((end-Date.now())/1000));
+    clock.textContent=fmt(left); barEl.style.width=((1-left/dur)*100)+"%";
+    if(left<=0) finish();
+  }
+  function start(){
+    try{ ac=ac||new (window.AudioContext||window.webkitAudioContext)(); ac.resume&&ac.resume(); }catch(e){}
+    box.classList.remove("done"); box.classList.add("running");
+    end=Date.now()+dur*1000; go.textContent="Parar"; go.setAttribute("aria-label","Parar descanso");
+    clearInterval(tick); tick=setInterval(update,250); update(); holdWake();
+  }
+  go.onclick=()=>{ if(box.classList.contains("done")){ box.classList.remove("done"); idle(); } else if(tick) idle(); else start(); };
+  pres.onclick=e=>{ const b=e.target.closest("button"); if(!b) return; dur=+b.dataset.s; store.set("restDur",dur); mark(); box.classList.remove("done"); if(tick) start(); else idle(); };
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden&&tick) update(); });
+  mark(); idle();
+})();
 
 /* init */
 $("#vidAquec").href = V.run[1][0][0];
